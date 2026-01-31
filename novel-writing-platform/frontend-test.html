@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>前端注册测试</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>前端注册功能测试</h1>
+    
+    <div id="systemInfo" class="message info">
+        <strong>系统信息加载中...</strong>
+    </div>
+    
+    <form id="registerForm">
+        <div class="form-group">
+            <label for="email">邮箱地址:</label>
+            <input type="email" id="email" name="email" required placeholder="请输入邮箱地址">
+        </div>
+        
+        <div class="form-group">
+            <label for="username">用户名:</label>
+            <input type="text" id="username" name="username" required placeholder="请输入用户名">
+        </div>
+        
+        <div class="form-group">
+            <label for="password">密码:</label>
+            <input type="password" id="password" name="password" required placeholder="请输入密码（至少6位）">
+        </div>
+        
+        <div class="form-group">
+            <label for="confirmPassword">确认密码:</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="请再次输入密码">
+        </div>
+        
+        <button type="submit" id="submitBtn">立即注册</button>
+    </form>
+    
+    <div id="result"></div>
+    
+    <script>
+        // 检查系统信息
+        async function checkSystemInfo() {
+            try {
+                const response = await fetch('/api/debug');
+                const data = await response.json();
+                
+                const infoDiv = document.getElementById('systemInfo');
+                if (data.success) {
+                    infoDiv.className = 'message success';
+                    infoDiv.innerHTML = `
+                        <strong>✅ 系统状态正常</strong><br>
+                        数据库连接: ${data.data.dbConnection}<br>
+                        JWT配置: ${data.data.jwtTest}<br>
+                        环境变量: 已配置
+                    `;
+                } else {
+                    infoDiv.className = 'message error';
+                    infoDiv.innerHTML = `<strong>❌ 系统配置错误:</strong> ${data.error}`;
+                }
+            } catch (error) {
+                const infoDiv = document.getElementById('systemInfo');
+                infoDiv.className = 'message error';
+                infoDiv.innerHTML = `<strong>❌ 无法获取系统信息:</strong> ${error.message}`;
+            }
+        }
+        
+        // 表单提交处理
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const resultDiv = document.getElementById('result');
+            
+            // 获取表单数据
+            const formData = new FormData(e.target);
+            const data = {
+                email: formData.get('email').trim(),
+                username: formData.get('username').trim(),
+                password: formData.get('password')
+            };
+            
+            // 基本验证
+            if (!data.email || !data.username || !data.password) {
+                resultDiv.innerHTML = '<div class="message error">❌ 请填写所有必填字段</div>';
+                return;
+            }
+            
+            if (data.password.length < 6) {
+                resultDiv.innerHTML = '<div class="message error">❌ 密码长度至少6位</div>';
+                return;
+            }
+            
+            if (data.password !== formData.get('confirmPassword')) {
+                resultDiv.innerHTML = '<div class="message error">❌ 两次输入的密码不一致</div>';
+                return;
+            }
+            
+            // 邮箱格式验证
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(data.email)) {
+                resultDiv.innerHTML = '<div class="message error">❌ 请输入有效的邮箱地址</div>';
+                return;
+            }
+            
+            // 禁用按钮，显示加载状态
+            submitBtn.disabled = true;
+            submitBtn.textContent = '注册中...';
+            resultDiv.innerHTML = '<div class="message info">🔄 正在处理注册请求...</div>';
+            
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const responseData = await response.json();
+                
+                if (response.ok) {
+                    // 注册成功
+                    resultDiv.innerHTML = `
+                        <div class="message success">
+                            <strong>🎉 注册成功!</strong><br>
+                            用户ID: ${responseData.user.id}<br>
+                            用户名: ${responseData.user.username}<br>
+                            邮箱: ${responseData.user.email}
+                        </div>
+                        <pre>完整响应: ${JSON.stringify(responseData, null, 2)}</pre>
+                    `;
+                    
+                    // 保存到localStorage (模拟真实前端行为)
+                    try {
+                        localStorage.setItem('token', responseData.token);
+                        localStorage.setItem('user', JSON.stringify(responseData.user));
+                        console.log('用户数据已保存到localStorage');
+                    } catch (storageError) {
+                        console.error('保存到localStorage失败:', storageError);
+                    }
+                    
+                } else {
+                    // 注册失败
+                    const errorHtml = `
+                        <div class="message error">
+                            <strong>❌ 注册失败</strong><br>
+                            错误信息: ${responseData.error}
+                            ${responseData.details ? `<br>详细原因: ${responseData.details}` : ''}
+                        </div>
+                        <pre>错误响应: ${JSON.stringify(responseData, null, 2)}</pre>
+                    `;
+                    resultDiv.innerHTML = errorHtml;
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="message error">
+                        <strong>❌ 网络错误</strong><br>
+                        ${error.message}
+                    </div>
+                    <pre>错误详情: ${error.stack}</pre>
+                `;
+            } finally {
+                // 恢复按钮状态
+                submitBtn.disabled = false;
+                submitBtn.textContent = '立即注册';
+            }
+        });
+        
+        // 页面加载时检查系统信息
+        window.addEventListener('load', checkSystemInfo);
+        
+        // 定期刷新系统信息（每30秒）
+        setInterval(checkSystemInfo, 30000);
+    </script>
+</body>
+</html>

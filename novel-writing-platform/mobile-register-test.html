@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>移动端注册测试</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .device-info {
+            background: #f3f4f6;
+            padding: 15px;
+            font-size: 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .device-info div {
+            margin-bottom: 5px;
+        }
+        
+        .form-container {
+            padding: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 16px;
+            color: #374151;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: #fafafa;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 15px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+        }
+        
+        .submit-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .log-container {
+            background: #1f2937;
+            color: #10b981;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        
+        .log-entry {
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #374151;
+        }
+        
+        .log-entry.error {
+            color: #ef4444;
+        }
+        
+        .log-entry.success {
+            color: #10b981;
+        }
+        
+        .log-entry.info {
+            color: #3b82f6;
+        }
+        
+        .debug-info {
+            background: #fef3c7;
+            border: 1px solid #fcd34d;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .debug-info h3 {
+            color: #92400e;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .debug-info ul {
+            margin-left: 20px;
+            font-size: 12px;
+            color: #78350f;
+        }
+        
+        .debug-info li {
+            margin-bottom: 5px;
+        }
+        
+        .test-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .test-btn {
+            padding: 12px;
+            background: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .test-btn:hover {
+            background: #4f46e5;
+        }
+        
+        .network-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .network-status.online {
+            background: #10b981;
+            color: white;
+        }
+        
+        .network-status.offline {
+            background: #ef4444;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📱 移动端注册测试</h1>
+            <p>模拟移动设备环境进行注册测试</p>
+        </div>
+        
+        <div class="device-info">
+            <div><strong>设备类型:</strong> <span id="deviceType">检测中...</span></div>
+            <div><strong>屏幕尺寸:</strong> <span id="screenSize">检测中...</span></div>
+            <div><strong>用户代理:</strong> <span id="userAgent">检测中...</span></div>
+            <div><strong>网络状态:</strong> <span id="networkStatus" class="network-status">检测中...</span></div>
+            <div><strong>连接类型:</strong> <span id="connectionType">不支持</span></div>
+        </div>
+        
+        <div class="form-container">
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="email">邮箱地址</label>
+                    <input type="email" id="email" name="email" placeholder="test@example.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" name="username" placeholder="testuser" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" name="password" placeholder="至少6位密码" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">确认密码</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="再次输入密码" required>
+                </div>
+                
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    🔐 开始注册测试
+                </button>
+            </form>
+            
+            <div class="test-buttons">
+                <button class="test-btn" onclick="testConnection()">🌐 测试连接</button>
+                <button class="test-btn" onclick="generateRandomData()">🎲 随机数据</button>
+                <button class="test-btn" onclick="simulateSlowNetwork()">🐌 慢网络</button>
+                <button class="test-btn" onclick="clearLogs()">🗑️ 清空日志</button>
+            </div>
+        </div>
+        
+        <div class="debug-info">
+            <h3>🔍 调试信息</h3>
+            <ul>
+                <li>使用移动设备User-Agent模拟</li>
+                <li>支持触摸事件优化</li>
+                <li>网络状态实时监控</li>
+                <li>详细的错误日志记录</li>
+                <li>响应式布局适配</li>
+            </ul>
+        </div>
+        
+        <div class="log-container" id="logContainer">
+            <div class="log-entry info">📱 移动端注册测试工具已加载</div>
+        </div>
+    </div>
+
+    <script>
+        // 设备检测和信息显示
+        function updateDeviceInfo() {
+            const isMobile = /Mobile|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            document.getElementById('deviceType').textContent = isMobile ? '移动设备' : '桌面设备';
+            document.getElementById('screenSize').textContent = `${window.innerWidth}x${window.innerHeight}`;
+            document.getElementById('userAgent').textContent = navigator.userAgent.substring(0, 50) + '...';
+            
+            // 网络状态
+            const networkStatus = document.getElementById('networkStatus');
+            if (navigator.onLine) {
+                networkStatus.textContent = '在线';
+                networkStatus.className = 'network-status online';
+            } else {
+                networkStatus.textContent = '离线';
+                networkStatus.className = 'network-status offline';
+            }
+            
+            // 连接类型
+            if ('connection' in navigator) {
+                const connection = navigator.connection;
+                document.getElementById('connectionType').textContent = 
+                    connection.effectiveType || connection.type || '未知';
+            }
+        }
+        
+        // 日志记录功能
+        function addLog(message, type = 'info') {
+            const logContainer = document.getElementById('logContainer');
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry ${type}`;
+            const timestamp = new Date().toLocaleTimeString();
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+        
+        // 测试服务器连接
+        async function testConnection() {
+            addLog('🌐 开始测试服务器连接...', 'info');
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'OPTIONS',
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15'
+                    }
+                });
+                addLog(`✅ 连接成功，状态码: ${response.status}`, 'success');
+            } catch (error) {
+                addLog(`❌ 连接失败: ${error.message}`, 'error');
+            }
+        }
+        
+        // 生成随机测试数据
+        function generateRandomData() {
+            const timestamp = Date.now();
+            document.getElementById('email').value = `mobiletest${timestamp}@example.com`;
+            document.getElementById('username').value = `mobileuser${timestamp}`;
+            document.getElementById('password').value = 'testpass123';
+            document.getElementById('confirmPassword').value = 'testpass123';
+            addLog('🎲 已生成随机测试数据', 'info');
+        }
+        
+        // 模拟慢网络
+        function simulateSlowNetwork() {
+            addLog('🐌 模拟慢网络环境...', 'info');
+            // 这里可以添加一些延迟逻辑
+        }
+        
+        // 清空日志
+        function clearLogs() {
+            document.getElementById('logContainer').innerHTML = '';
+            addLog('🗑️ 日志已清空', 'info');
+        }
+        
+        // 注册表单提交
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = '🔄 注册中...';
+            
+            const formData = new FormData(e.target);
+            const data = {
+                email: formData.get('email'),
+                username: formData.get('username'),
+                password: formData.get('password')
+            };
+            
+            addLog('📤 开始发送注册请求...', 'info');
+            addLog(`📧 邮箱: ${data.email}`, 'info');
+            addLog(`👤 用户名: ${data.username}`, 'info');
+            addLog(`🔐 密码长度: ${data.password.length}`, 'info');
+            
+            try {
+                const startTime = Date.now();
+                
+                const response = await fetch('http://localhost:3000/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1',
+                        'Accept': 'application/json',
+                        'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+                        'Cache-Control': 'no-cache',
+                        'X-Mobile-Optimized': 'true'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const endTime = Date.now();
+                const responseTime = endTime - startTime;
+                
+                addLog(`📡 响应状态: ${response.status} ${response.statusText}`, 'info');
+                addLog(`⏱️ 响应时间: ${responseTime}ms`, 'info');
+                
+                const responseText = await response.text();
+                addLog(`📄 响应内容: ${responseText.substring(0, 200)}${responseText.length > 200 ? '...' : ''}`, 'info');
+                
+                try {
+                    const result = JSON.parse(responseText);
+                    if (response.ok && result.token) {
+                        addLog('🎉 注册成功！', 'success');
+                        addLog(`🔑 Token已生成: ${result.token.substring(0, 50)}...`, 'success');
+                        addLog(`👤 用户ID: ${result.user.id}`, 'success');
+                        
+                        // 尝试保存到localStorage
+                        try {
+                            localStorage.setItem('token', result.token);
+                            localStorage.setItem('user', JSON.stringify(result.user));
+                            addLog('💾 数据已保存到localStorage', 'success');
+                        } catch (storageError) {
+                            addLog(`❌ localStorage保存失败: ${storageError.message}`, 'error');
+                        }
+                    } else {
+                        addLog(`❌ 注册失败: ${result.error || '未知错误'}`, 'error');
+                        if (result.details) {
+                            addLog(`📋 详细信息: ${result.details}`, 'error');
+                        }
+                        if (result.suggestions && result.suggestions.length > 0) {
+                            addLog('💡 建议解决方案:', 'error');
+                            result.suggestions.forEach((suggestion, index) => {
+                                addLog(`   ${index + 1}. ${suggestion}`, 'error');
+                            });
+                        }
+                    }
+                } catch (parseError) {
+                    addLog(`❌ JSON解析失败: ${parseError.message}`, 'error');
+                }
+                
+            } catch (error) {
+                addLog(`❌ 请求异常: ${error.message}`, 'error');
+                if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                    addLog('🔍 可能原因: CORS问题或服务器未启动', 'error');
+                }
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '🔐 开始注册测试';
+            }
+        });
+        
+        // 监听网络状态变化
+        window.addEventListener('online', () => {
+            updateDeviceInfo();
+            addLog('🌐 网络已连接', 'success');
+        });
+        
+        window.addEventListener('offline', () => {
+            updateDeviceInfo();
+            addLog('📵 网络已断开', 'error');
+        });
+        
+        window.addEventListener('resize', updateDeviceInfo);
+        
+        // 初始化
+        updateDeviceInfo();
+        addLog('📱 移动端测试工具初始化完成', 'success');
+        addLog('💡 提示: 请确保开发服务器在 http://localhost:3000 运行', 'info');
+    </script>
+</body>
+</html>

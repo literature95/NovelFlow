@@ -1,0 +1,40 @@
+{
+  "name": "novel-writing-platform",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 5000",
+    "build": "next build",
+    "start": "next start -p 5000",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@langchain/core": "^1.1.7",
+    "@langchain/openai": "^1.2.0",
+    "@prisma/client": "^5.22.0",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "axios": "^1.13.2",
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.2.3",
+    "jsonwebtoken": "^9.0.3",
+    "langchain": "^1.2.2",
+    "lucide-react": "^0.562.0",
+    "next": "^16.1.0",
+    "next-auth": "^4.24.13",
+    "prisma": "^5.22.0",
+    "react": "19.2.1",
+    "react-dom": "19.2.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "autoprefixer": "^10.4.23",
+    "eslint": "^9",
+    "eslint-config-next": "16.0.10",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

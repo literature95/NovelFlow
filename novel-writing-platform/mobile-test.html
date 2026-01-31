@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>移动端注册页面测试</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .mobile-viewport {
+            width: 375px;
+            height: 667px;
+            border: 2px solid #333;
+            border-radius: 30px;
+            overflow: hidden;
+            position: relative;
+            background: white;
+            margin: 20px auto;
+        }
+        
+        .mobile-header {
+            height: 44px;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .mobile-content {
+            height: calc(100% - 44px);
+            overflow-y: auto;
+        }
+        
+        @media (max-width: 480px) {
+            .mobile-viewport {
+                width: 100%;
+                height: 100vh;
+                border: none;
+                border-radius: 0;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4">
+    <div class="text-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-800 mb-2">移动端注册页面测试</h1>
+        <p class="text-gray-600">模拟移动设备显示效果</p>
+    </div>
+    
+    <!-- iPhone 模拟器 -->
+    <div class="mobile-viewport">
+        <div class="mobile-header">
+            <div class="text-sm font-medium">小说创作平台</div>
+        </div>
+        <div class="mobile-content">
+            <!-- 注册页面内容 -->
+            <div class="min-h-screen bg-gradient-to-br from-green-50 to-white flex items-start justify-center px-3 py-4">
+                <div class="w-full max-w-md">
+                    <div class="bg-white p-4 rounded-xl shadow-lg">
+                        <!-- 标题 -->
+                        <div class="text-center mb-6">
+                            <div class="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg class="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                                </svg>
+                            </div>
+                            <h2 class="text-xl font-bold text-gray-900 mb-2">创建新账户</h2>
+                            <p class="text-gray-600 text-sm">加入我们，开始您的创作之旅</p>
+                            
+                            <!-- 设备状态 -->
+                            <div class="mt-4 text-xs text-gray-500">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <span>移动端优化</span>
+                                    <span>•</span>
+                                    <span id="deviceInfo">375px</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 表单 -->
+                        <form class="space-y-4">
+                            <!-- 邮箱 -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">邮箱地址</label>
+                                <input type="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none transition-colors text-base" placeholder="请输入邮箱地址">
+                            </div>
+
+                            <!-- 用户名 -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">用户名</label>
+                                <input type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none transition-colors text-base" placeholder="请输入用户名（2-20位）">
+                            </div>
+
+                            <!-- 密码 -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">密码</label>
+                                <input type="password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none transition-colors text-base" placeholder="请输入密码（至少6位）">
+                            </div>
+
+                            <!-- 确认密码 -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">确认密码</label>
+                                <input type="password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none transition-colors text-base" placeholder="请再次输入密码">
+                            </div>
+
+                            <!-- 注册按钮 -->
+                            <button type="button" onclick="testRegister()" class="w-full flex items-center justify-center px-4 py-4 border border-transparent text-base font-medium rounded-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                                </svg>
+                                免费注册
+                            </button>
+                        </form>
+
+                        <!-- 底部链接 -->
+                        <div class="mt-6 text-center space-y-3">
+                            <div class="text-sm text-gray-600">
+                                已有账户？{' '}
+                                <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500 inline-flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+                                    </svg>
+                                    立即登录
+                                </a>
+                            </div>
+                            <div class="text-xs">
+                                <a href="#" class="text-gray-500 hover:text-gray-700">← 返回首页</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 优化说明 -->
+    <div class="max-w-2xl mx-auto mt-8 bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold mb-4 text-gray-800">移动端优化要点</h2>
+        <div class="space-y-3 text-sm text-gray-600">
+            <div class="flex items-start">
+                <span class="text-green-500 mr-2">✓</span>
+                <div>
+                    <strong>响应式布局:</strong> 适配不同屏幕尺寸，在小屏幕上显示为单列布局
+                </div>
+            </div>
+            <div class="flex items-start">
+                <span class="text-green-500 mr-2">✓</span>
+                <div>
+                    <strong>触摸优化:</strong> 输入框高度增加到44px+，符合移动端触摸标准
+                </div>
+            </div>
+            <div class="flex items-start">
+                <span class="text-green-500 mr-2">✓</span>
+                <div>
+                    <strong>字体适配:</strong> 基础字体大小适配，确保在小屏幕上可读性好
+                </div>
+            </div>
+            <div class="flex items-start">
+                <span class="text-green-500 mr-2">✓</span>
+                <div>
+                    <strong>间距优化:</strong> 适当的内边距和间距，避免元素过于拥挤
+                </div>
+            </div>
+            <div class="flex items-start">
+                <span class="text-green-500 mr-2">✓</span>
+                <div>
+                    <strong>容器限制:</strong> 移动端表单容器有最大宽度限制，居中显示
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 更新设备信息
+        function updateDeviceInfo() {
+            const deviceInfo = document.getElementById('deviceInfo');
+            const width = window.innerWidth;
+            deviceInfo.textContent = `${width}px • 移动端优化`;
+        }
+
+        // 测试注册功能
+        async function testRegister() {
+            const button = event.target;
+            const originalText = button.innerHTML;
+            
+            // 显示加载状态
+            button.innerHTML = `
+                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                注册中...
+            `;
+            button.disabled = true;
+
+            // 模拟API调用
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.disabled = false;
+                
+                // 显示成功消息
+                alert('这是一个测试页面。在实际应用中，这里会调用注册API。');
+            }, 2000);
+        }
+
+        // 初始化
+        window.addEventListener('load', updateDeviceInfo);
+        window.addEventListener('resize', updateDeviceInfo);
+    </script>
+</body>
+</html>

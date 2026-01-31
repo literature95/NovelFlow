@@ -1,0 +1,289 @@
+/* 章节列表相关样式 */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 拖拽相关样式 */
+.draggable-item {
+  cursor: move;
+}
+
+.dragging {
+  opacity: 0.5;
+}
+
+.drag-over {
+  border-top: 2px solid #3b82f6;
+}
+
+/* 章节进度条 */
+.chapter-progress {
+  height: 4px;
+  background: #e5e7eb;
+  overflow: hidden;
+}
+
+.chapter-progress-bar {
+  height: 100%;
+  background: linear-gradient(to right, #3b82f6, #8b5cf6);
+  transition: width 0.3s ease;
+}
+
+/* 章节状态标签 */
+.chapter-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid;
+}
+
+.chapter-status-gray {
+  background-color: #f3f4f6;
+  color: #374151;
+  border-color: #d1d5db;
+}
+
+.chapter-status-yellow {
+  background-color: #fef3c7;
+  color: #92400e;
+  border-color: #fcd34d;
+}
+
+.chapter-status-blue {
+  background-color: #dbeafe;
+  color: #1e40af;
+  border-color: #60a5fa;
+}
+
+.chapter-status-green {
+  background-color: #d1fae5;
+  color: #065f46;
+  border-color: #34d399;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .chapter-list-container {
+    padding: 1rem;
+  }
+  
+  .chapter-card {
+    padding: 1rem;
+  }
+  
+  .chapter-actions {
+    opacity: 1 !important;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .chapter-actions button {
+    padding: 0.5rem;
+  }
+}
+
+/* 工作区响应式设计 */
+@media (max-width: 768px) {
+  .workspace-container {
+    flex-direction: column;
+  }
+  
+  .workspace-sidebar {
+    width: 100% !important;
+    height: auto !important;
+    border-right: none !important;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .workspace-sidebar.collapsed {
+    display: none;
+  }
+  
+  .workspace-right-panel {
+    width: 100% !important;
+    height: auto !important;
+    border-left: none !important;
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  .workspace-right-panel.collapsed {
+    display: none;
+  }
+  
+  .writing-stats {
+    grid-template-columns: 1fr !important;
+    gap: 1rem;
+  }
+  
+  .quick-actions {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .chapter-list-item {
+    padding: 1rem !important;
+  }
+  
+  .ai-assistant {
+    height: 400px;
+  }
+}
+
+@media (max-width: 480px) {
+  .workspace-sidebar {
+    min-height: 60px;
+  }
+  
+  .workspace-sidebar .sidebar-header {
+    padding: 0.75rem;
+  }
+  
+  .workspace-sidebar .nav-items {
+    display: none;
+  }
+  
+  .workspace-right-panel {
+    min-height: 300px;
+  }
+  
+  .writing-progress-cards {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .chapter-stat-cards {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* 触摸优化 */
+@media (hover: none) and (pointer: coarse) {
+  .chapter-card {
+    padding: 1.25rem;
+  }
+  
+  .chapter-actions {
+    opacity: 1 !important;
+    margin-top: 1rem;
+  }
+  
+  .chapter-actions button {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0.75rem;
+  }
+  
+  .quick-action-button {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0.75rem;
+  }
+  
+  .sidebar-nav-button {
+    min-height: 48px;
+    padding: 0.75rem;
+  }
+  
+  .tab-button {
+    min-height: 44px;
+    padding: 0.75rem;
+  }
+}
+
+/* 平板适配 */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .workspace-sidebar {
+    width: 200px !important;
+  }
+  
+  .workspace-right-panel {
+    width: 320px !important;
+  }
+  
+  .writing-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .writing-progress-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 加载动画 */
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 悬停效果 */
+.hover-lift {
+  transition: all 0.2s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* 模态框背景动画 */
+.modal-backdrop {
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-content {
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* 统计卡片渐变背景 */
+.gradient-blue-purple {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.gradient-green-blue {
+  background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+}
+
+.gradient-orange-red {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}

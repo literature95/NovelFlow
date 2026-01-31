@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册问题诊断工具</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        button:disabled { background: #6c757d; cursor: not-allowed; }
+        
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 12px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .input-group {
+            margin: 10px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .step-number {
+            background: #007bff;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        .step.completed .step-number { background: #28a745; }
+        .step.error .step-number { background: #dc3545; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 小说创作平台 - 注册问题诊断工具</h1>
+        <p>此工具帮助诊断注册功能的具体问题。请按顺序执行以下测试步骤。</p>
+        
+        <!-- 系统状态检查 -->
+        <div class="test-section">
+            <h3>📊 系统状态检查</h3>
+            <button onclick="checkSystemStatus()">检查系统状态</button>
+            <div id="systemStatus"></div>
+        </div>
+        
+        <!-- 注册API测试 -->
+        <div class="test-section">
+            <h3>🧪 注册API测试</h3>
+            <div class="grid">
+                <div>
+                    <button onclick="testNormalRegister()">测试正常注册</button>
+                    <button onclick="testErrorCases()">测试错误场景</button>
+                </div>
+                <div>
+                    <button onclick="testDuplicateEmail()">测试重复邮箱</button>
+                    <button onclick="testTokenGeneration()">测试Token生成</button>
+                </div>
+            </div>
+            <div id="apiTestResults"></div>
+        </div>
+        
+        <!-- 前端模拟测试 -->
+        <div class="test-section">
+            <h3>🌐 前端模拟测试</h3>
+            <div class="input-group">
+                <label>邮箱:</label>
+                <input type="email" id="testEmail" placeholder="请输入测试邮箱" value="frontend@example.com">
+            </div>
+            <div class="input-group">
+                <label>用户名:</label>
+                <input type="text" id="testUsername" placeholder="请输入用户名" value="frontendtest">
+            </div>
+            <div class="input-group">
+                <label>密码:</label>
+                <input type="password" id="testPassword" placeholder="请输入密码" value="password123">
+            </div>
+            <button onclick="simulateFrontendRegister()">模拟前端注册</button>
+            <div id="frontendTestResults"></div>
+        </div>
+        
+        <!-- 诊断步骤 -->
+        <div class="test-section">
+            <h3>🔧 完整诊断流程</h3>
+            <div class="step" id="step1">
+                <div class="step-number">1</div>
+                <div>检查系统配置和环境变量</div>
+            </div>
+            <div class="step" id="step2">
+                <div class="step-number">2</div>
+                <div>测试数据库连接</div>
+            </div>
+            <div class="step" id="step3">
+                <div class="step-number">3</div>
+                <div>验证JWT配置</div>
+            </div>
+            <div class="step" id="step4">
+                <div class="step-number">4</div>
+                <div>测试注册API功能</div>
+            </div>
+            <div class="step" id="step5">
+                <div class="step-number">5</div>
+                <div>模拟前端注册流程</div>
+            </div>
+            <button onclick="runFullDiagnosis()">🚀 运行完整诊断</button>
+            <div id="diagnosisResults"></div>
+        </div>
+        
+        <!-- 解决方案 -->
+        <div class="test-section">
+            <h3>💡 常见问题和解决方案</h3>
+            <div id="solutions">
+                <div class="info">
+                    <strong>如果注册失败，请检查以下常见问题：</strong>
+                    <ul style="margin: 10px 0; padding-left: 20px;">
+                        <li>网络连接问题 - 确保可以访问服务器</li>
+                        <li>邮箱格式错误 - 使用有效的邮箱地址</li>
+                        <li>密码太短 - 密码至少需要6位字符</li>
+                        <li>用户已存在 - 邮箱或用户名已被注册</li>
+                        <li>浏览器JavaScript错误 - 检查浏览器控制台</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 检查系统状态
+        async function checkSystemStatus() {
+            const statusDiv = document.getElementById('systemStatus');
+            statusDiv.innerHTML = '<div class="info">🔄 正在检查系统状态...</div>';
+            
+            try {
+                const response = await fetch('/api/debug');
+                const data = await response.json();
+                
+                if (data.success) {
+                    let html = '<div class="success">✅ 系统状态正常</div>';
+                    html += '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                    statusDiv.innerHTML = html;
+                    updateStepStatus('step1', 'completed');
+                } else {
+                    statusDiv.innerHTML = `<div class="error">❌ 系统状态异常: ${data.error}</div>`;
+                    updateStepStatus('step1', 'error');
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="error">❌ 无法检查系统状态: ${error.message}</div>`;
+                updateStepStatus('step1', 'error');
+            }
+        }
+        
+        // 测试正常注册
+        async function testNormalRegister() {
+            const resultsDiv = document.getElementById('apiTestResults');
+            const randomId = Date.now();
+            
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: `test${randomId}@example.com`,
+                        username: `test${randomId}`,
+                        password: 'password123'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    let html = '<div class="success">✅ 正常注册测试通过</div>';
+                    html += '<pre>响应数据: ' + JSON.stringify(data, null, 2) + '</pre>';
+                    resultsDiv.innerHTML = html;
+                    updateStepStatus('step4', 'completed');
+                } else {
+                    resultsDiv.innerHTML = `<div class="error">❌ 正常注册测试失败: ${data.error}</div>`;
+                    updateStepStatus('step4', 'error');
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">❌ 注册测试异常: ${error.message}</div>`;
+                updateStepStatus('step4', 'error');
+            }
+        }
+        
+        // 测试错误场景
+        async function testErrorCases() {
+            const resultsDiv = document.getElementById('apiTestResults');
+            let results = [];
+            
+            const tests = [
+                { name: '空字段测试', data: { email: '', username: 'test', password: 'password123' } },
+                { name: '无效邮箱测试', data: { email: 'invalid-email', username: 'test', password: 'password123' } },
+                { name: '密码太短测试', data: { email: 'test@example.com', username: 'test', password: '123' } }
+            ];
+            
+            for (const test of tests) {
+                try {
+                    const response = await fetch('/api/auth/register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(test.data)
+                    });
+                    
+                    const data = await response.json();
+                    results.push(`${test.name}: ${response.ok ? '❌ 应该失败但成功了' : '✅ 正确返回错误'}`);
+                } catch (error) {
+                    results.push(`${test.name}: ❌ 请求失败 - ${error.message}`);
+                }
+            }
+            
+            resultsDiv.innerHTML = '<div class="info">📋 错误场景测试结果:</div><ul>' + 
+                results.map(r => `<li>${r}</li>`).join('') + '</ul>';
+        }
+        
+        // 测试重复邮箱
+        async function testDuplicateEmail() {
+            const resultsDiv = document.getElementById('apiTestResults');
+            
+            try {
+                // 先注册一个用户
+                await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: 'duplicate@example.com',
+                        username: 'duplicateuser',
+                        password: 'password123'
+                    })
+                });
+                
+                // 再次尝试注册相同邮箱
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: 'duplicate@example.com',
+                        username: 'newuser',
+                        password: 'password123'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok && data.error === '邮箱已存在') {
+                    resultsDiv.innerHTML = '<div class="success">✅ 重复邮箱检测正常</div>';
+                } else {
+                    resultsDiv.innerHTML = `<div class="error">❌ 重复邮箱检测异常: ${JSON.stringify(data)}</div>`;
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">❌ 重复邮箱测试异常: ${error.message}</div>`;
+            }
+        }
+        
+        // 测试Token生成
+        async function testTokenGeneration() {
+            const resultsDiv = document.getElementById('apiTestResults');
+            
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: `token${Date.now()}@example.com`,
+                        username: `token${Date.now()}`,
+                        password: 'password123'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.token && data.token.length > 50) {
+                    resultsDiv.innerHTML = '<div class="success">✅ Token生成正常</div>';
+                } else {
+                    resultsDiv.innerHTML = `<div class="error">❌ Token生成异常</div>`;
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">❌ Token测试异常: ${error.message}</div>`;
+            }
+        }
+        
+        // 模拟前端注册
+        async function simulateFrontendRegister() {
+            const resultsDiv = document.getElementById('frontendTestResults');
+            const email = document.getElementById('testEmail').value;
+            const username = document.getElementById('testUsername').value;
+            const password = document.getElementById('testPassword').value;
+            
+            if (!email || !username || !password) {
+                resultsDiv.innerHTML = '<div class="error">❌ 请填写所有字段</div>';
+                return;
+            }
+            
+            resultsDiv.innerHTML = '<div class="info">🔄 正在模拟前端注册...</div>';
+            
+            try {
+                // 模拟浏览器的完整请求
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'User-Agent': navigator.userAgent,
+                        'Origin': window.location.origin,
+                        'Referer': window.location.href
+                    },
+                    body: JSON.stringify({
+                        email: email.trim(),
+                        username: username.trim(),
+                        password: password
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // 模拟保存到localStorage
+                    try {
+                        localStorage.setItem('token', data.token);
+                        localStorage.setItem('user', JSON.stringify(data.user));
+                    } catch (e) {
+                        console.warn('localStorage保存失败:', e);
+                    }
+                    
+                    let html = '<div class="success">🎉 前端模拟注册成功!</div>';
+                    html += '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                    resultsDiv.innerHTML = html;
+                    updateStepStatus('step5', 'completed');
+                } else {
+                    let html = `<div class="error">❌ 前端模拟注册失败: ${data.error}</div>`;
+                    if (data.details) {
+                        html += `<div class="warning">详细信息: ${data.details}</div>`;
+                    }
+                    html += '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                    resultsDiv.innerHTML = html;
+                }
+                
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">❌ 前端模拟异常: ${error.message}</div>`;
+            }
+        }
+        
+        // 运行完整诊断
+        async function runFullDiagnosis() {
+            const resultsDiv = document.getElementById('diagnosisResults');
+            resultsDiv.innerHTML = '<div class="info">🔄 正在运行完整诊断...</div>';
+            
+            // 重置所有步骤状态
+            for (let i = 1; i <= 5; i++) {
+                updateStepStatus(`step${i}`, '');
+            }
+            
+            try {
+                // 步骤1: 系统状态
+                await checkSystemStatus();
+                
+                // 步骤2-3: API测试
+                await testNormalRegister();
+                
+                // 步骤4: 前端模拟
+                await simulateFrontendRegister();
+                
+                resultsDiv.innerHTML = '<div class="success">🎉 完整诊断完成！请查看上述各项测试结果。</div>';
+                
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">❌ 诊断过程中出现错误: ${error.message}</div>`;
+            }
+        }
+        
+        // 更新步骤状态
+        function updateStepStatus(stepId, status) {
+            const step = document.getElementById(stepId);
+            step.className = 'step ' + status;
+        }
+        
+        // 页面加载时自动运行系统检查
+        window.addEventListener('load', () => {
+            checkSystemStatus();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+[project]
+requires = ["nodejs-24"]
+
+[dev]
+build = ["pnpm", "install"]
+run = ["pnpm", "dev"]
+
+[deploy]
+build = ["bash", "-c", "pnpm install && pnpm run build"]
+run = ["pnpm", "run", "start"]

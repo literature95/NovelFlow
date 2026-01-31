@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>注册测试</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>注册功能测试</h1>
+    <form id="registerForm">
+        <div>
+            <label>邮箱:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div>
+            <label>用户名:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div>
+            <label>密码:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div>
+            <label>确认密码:</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required>
+        </div>
+        <button type="submit">注册</button>
+    </form>
+    
+    <div id="result" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc;"></div>
+    
+    <div id="debug" style="margin-top: 20px; padding: 10px; background: #f0f0f0;"></div>
+
+    <script>
+        // 首先检查调试信息
+        async function checkDebug() {
+            try {
+                const response = await fetch('/api/debug');
+                const data = await response.json();
+                document.getElementById('debug').innerHTML = '<h3>系统调试信息:</h3><pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch (error) {
+                document.getElementById('debug').innerHTML = '<h3>调试信息获取失败:</h3><pre>' + error.message + '</pre>';
+            }
+        }
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = {
+                email: formData.get('email').trim(),
+                username: formData.get('username').trim(),
+                password: formData.get('password')
+            };
+            
+            const resultDiv = document.getElementById('result');
+            
+            // 基本验证
+            if (!data.email || !data.username || !data.password) {
+                resultDiv.innerHTML = '<p style="color: red;">请填写所有必填字段</p>';
+                return;
+            }
+            
+            if (data.password.length < 6) {
+                resultDiv.innerHTML = '<p style="color: red;">密码长度至少6位</p>';
+                return;
+            }
+            
+            if (data.password !== formData.get('confirmPassword')) {
+                resultDiv.innerHTML = '<p style="color: red;">两次输入的密码不一致</p>';
+                return;
+            }
+            
+            resultDiv.innerHTML = '<p>正在注册...</p>';
+            
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const responseData = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <p style="color: green;">注册成功!</p>
+                        <pre>${JSON.stringify(responseData, null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <p style="color: red;">注册失败: ${responseData.error}</p>
+                        ${responseData.details ? '<p style="color: orange;">详细原因: ' + responseData.details + '</p>' : ''}
+                        <pre>${JSON.stringify(responseData, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <p style="color: red;">请求失败: ${error.message}</p>
+                    <pre>${error.stack}</pre>
+                `;
+            }
+        });
+        
+        // 页面加载时检查调试信息
+        checkDebug();
+    </script>
+</body>
+</html>

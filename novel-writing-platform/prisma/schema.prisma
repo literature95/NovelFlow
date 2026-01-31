@@ -1,0 +1,131 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String            @id @default(cuid())
+  email           String            @unique
+  username        String            @unique
+  password        String
+  avatar          String?
+  nickname        String?
+  gender          String?
+  birthDate       DateTime?
+  phone           String?
+  membershipLevel String            @default("free")
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  aiConfigs       AIConfig[]
+  materials       Material[]
+  novels          Novel[]
+  templates       WritingTemplate[]
+}
+
+model Novel {
+  id            String         @id @default(cuid())
+  title         String
+  description   String?
+  outline       String?
+  worldSetting  String?
+  protagonist   String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  userId        String
+  chapters      Chapter[]
+  characters    Character[]
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  worldSettings WorldSetting[]
+}
+
+model Chapter {
+  id            String   @id @default(cuid())
+  title         String
+  summary       String?
+  content       String?
+  status        String   @default("draft")
+  isAIGenerated Boolean  @default(false)
+  order         Int
+  wordCount     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  novelId       String
+  novel         Novel    @relation(fields: [novelId], references: [id], onDelete: Cascade)
+}
+
+model AIConfig {
+  id               String   @id @default(cuid())
+  name             String
+  apiKey           String
+  baseUrl          String?
+  model            String?
+  role             String?
+  systemPrompt     String?
+  temperature      Float    @default(0.7)
+  maxTokens        Int      @default(2000)
+  contextWindow    Int      @default(4096)
+  topP             Float    @default(1)
+  topN             Int?     @default(0)
+  frequencyPenalty Float    @default(0)
+  presencePenalty  Float    @default(0)
+  isActive         Boolean  @default(false)
+  isDefault        Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Character {
+  id            String   @id @default(cuid())
+  novelId       String
+  name          String
+  description   String?
+  avatarUrl     String?
+  traits        String?
+  relationships String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  novel         Novel    @relation(fields: [novelId], references: [id], onDelete: Cascade)
+}
+
+model WorldSetting {
+  id        String   @id @default(cuid())
+  novelId   String
+  title     String
+  content   String
+  category  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  novel     Novel    @relation(fields: [novelId], references: [id], onDelete: Cascade)
+}
+
+model WritingTemplate {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  content     String
+  category    String
+  userId      String?
+  isPublic    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User?    @relation(fields: [userId], references: [id])
+}
+
+model Material {
+  id        String   @id @default(cuid())
+  userId    String?
+  title     String
+  content   String
+  category  String
+  tags      String?
+  isPublic  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User?    @relation(fields: [userId], references: [id])
+}

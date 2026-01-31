@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>创作中心测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .success {
+            color: #10b981;
+            font-weight: bold;
+        }
+        .change-log {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+        .before-after {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        .before, .after {
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .before {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+        }
+        .after {
+            background: #f0fdf4;
+            border-left: 4px solid #10b981;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>✅ 小说创作平台更新成功</h1>
+        
+        <div class="success">
+            <p>📝 已成功将"小说管理"更改为"创作中心"</p>
+        </div>
+
+        <div class="change-log">
+            <h3>📋 修改详情</h3>
+            <div class="before-after">
+                <div class="before">
+                    <strong>修改前：</strong><br>
+                    侧边栏菜单显示"小说管理"
+                </div>
+                <div class="after">
+                    <strong>修改后：</strong><br>
+                    侧边栏菜单显示"创作中心"
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <h3>🔗 访问链接</h3>
+            <ul>
+                <li><a href="http://localhost:5000/login" target="_blank">登录页面</a></li>
+                <li><a href="http://localhost:5000/dashboard" target="_blank">工作台</a></li>
+                <li><a href="http://localhost:5000/dashboard/novels" target="_blank">创作中心</a></li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 20px; padding: 15px; background: #e0f2fe; border-radius: 6px;">
+            <h3>💡 测试步骤</h3>
+            <ol>
+                <li>访问登录页面：http://localhost:5000/login</li>
+                <li>使用账号登录：
+                    <ul>
+                        <li>邮箱：test@example.com</li>
+                        <li>密码：test123</li>
+                    </ul>
+                </li>
+                <li>登录后查看左侧菜单栏</li>
+                <li>确认"创作中心"菜单项显示正确</li>
+                <li>点击"创作中心"进入页面</li>
+                <li>确认页面标题显示"创作中心"</li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>
