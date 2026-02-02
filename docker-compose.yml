@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: novel
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: ./novel-writing-platform
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: "postgresql://postgres:postgres@db:5432/novel"
+      NEXT_PUBLIC_URL: "http://localhost:5000"
+    depends_on:
+      - db
+
+volumes:
+  db-data:
