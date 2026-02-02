@@ -1,15 +1,45 @@
 version: '3.8'
+
+# 网络配置
+networks:
+  novelflow-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+# 服务配置
 services:
+  # 数据库服务
   db:
-    image: postgres:15
-    restart: unless-stopped
+    image: postgres:15-alpine
+    restart: on-failure:5
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: novel
+      POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
       - db-data:/var/lib/postgresql/data
+      - ./db-init:/docker-entrypoint-initdb.d
+    networks:
+      - novelflow-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d novel"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # 资源限制
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
+  # 应用服务
   app:
     build:
       context: ./novel-writing-platform
@@ -21,7 +51,30 @@ services:
     env_file:
       - .env
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    networks:
+      - novelflow-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5000/api/test-api"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    # 资源限制
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 1G
+        reservations:
+          cpus: '0.50'
+          memory: 512M
 
+# 数据卷
 volumes:
   db-data:
+    driver: local
+
+# 配置选项
+exports:
+  COMPOSE_PROJECT_NAME: novelflow

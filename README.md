@@ -119,89 +119,35 @@ npm run dev
 5. **访问应用**
 打开浏览器访问 http://localhost:5000
 
-### 🐳 Docker 部署 (推荐用于生产环境)
+### 🐳 Docker 部署
 
-本项目已包含 Docker 配置，支持使用 Docker Compose 进行容器化部署。
+本项目已包含优化的 Docker 配置，支持使用 Docker Compose 进行容器化部署。配置采用了现代最佳实践，包括多阶段构建、非 root 用户、健康检查、资源限制等功能。
 
-**环境要求:**
-- Docker
-- Docker Compose
+#### 环境要求
+- Docker (20.10 或更高版本)
+- Docker Compose (2.0 或更高版本)
 
-**部署步骤:**
+#### 本地开发部署
 
-1.  **构建 Docker 镜像 (在项目根目录 `NovelFlow/` 下执行)**
-    首先，您需要在本地构建应用的 Docker 镜像。
+如果您只是想在本地环境快速体验完整功能，可以使用以下步骤：
+
+1.  **准备环境变量文件**
+    在项目根目录创建 `.env` 文件并配置必要的环境变量：
     ```bash
-    docker build -t your-dockerhub-username/novelflow-app:latest ./novel-writing-platform
+    cp .env.example .env
+    # 编辑 .env 文件，配置数据库连接、AI API 密钥等
     ```
-    *   将 `your-dockerhub-username` 替换为您的 Docker Hub 用户名或其他容器注册表的用户名/项目名称。
-    *   `:latest` 是镜像标签，建议在生产环境中使用版本号 (例如 `:v1.0`)。
 
-2.  **登录并推送镜像到容器注册表 (可选，但推荐)**
-    如果您计划在多台服务器部署或使用云服务，建议将镜像推送到容器注册表 (如 Docker Hub)。
+2.  **启动服务**
+    在项目根目录执行以下命令启动所有服务：
     ```bash
-    docker login
-    docker push your-dockerhub-username/novelflow-app:latest
+    docker-compose up --build
     ```
+    *   `--build` 标志表示每次启动时重新构建镜像
+    *   如果不需要重新构建，可以使用 `docker-compose up -d` 在后台运行
 
-3.  **准备部署文件 (在云服务器上)**
-    在您的云服务器上创建一个项目目录 (例如 `/opt/novelflow`)，并将以下文件上传到该目录：
-    *   `docker-compose.yml` (位于 `NovelFlow/` 根目录)
-    *   `.env` (您需要根据云服务器环境创建和配置此文件，例如数据库连接字符串、`NEXT_PUBLIC_URL` 应设置为服务器的公共 IP 或域名)
-
-4.  **修改 `docker-compose.yml` (在云服务器上)**
-    编辑云服务器上的 `docker-compose.yml`，将 `app` 服务的 `build` 部分替换为 `image`，指向您推送到注册表的镜像。
-    ```yaml
-    # ...
-    app:
-      image: your-dockerhub-username/novelflow-app:latest # 修改为您的镜像
-    # ...
-    ```
-
-5.  **启动 Docker Compose 服务 (在云服务器上)**
-    在云服务器的项目目录下 (例如 `/opt/novelflow`) 执行以下命令启动服务：
-    ```bash
-    docker-compose up -d
-    ```
-    *   `-d` 标志表示在后台运行容器。
-
-6.  **访问应用**
-    打开浏览器访问 `http://<您的云服务器IP或域名>:5000`。
-
-### 手动安装步骤
-
-如果一键安装脚本出现问题，可以尝试手动安装：
-
-1. **克隆仓库**
-```bash
-git clone <仓库地址>
-cd NovelFlow/novel-writing-platform
-```
-
-2. **安装依赖**
-```bash
-npm install
-```
-
-3. **配置环境变量**
-```bash
-cp .env.example .env
-# 编辑 .env 文件，配置数据库连接、AI API 密钥等
-```
-
-4. **数据库初始化**
-```bash
-npx prisma migrate dev
-npx prisma generate
-```
-
-5. **启动开发服务器**
-```bash
-npm run dev
-```
-
-6. **访问应用**
-打开浏览器访问 http://localhost:5000
+3.  **访问应用**
+    服务启动后，打开浏览器访问：`http://localhost:5000`
 
 ## 📖 使用指南
 
@@ -298,68 +244,7 @@ npm run dev
 - ✅ 启动了开发服务器（端口5000）
 - ✅ 配置了数据库连接
 
---- c:\Users\10153\OneDrive\桌面\NovelFlow\README.md
-+++ c:\Users\10153\OneDrive\桌面\NovelFlow\README.md
-@@ -107,6 +107,46 @@
- 5. **访问应用**
- 打开浏览器访问 http://localhost:5000
- 
-+### 🐳 Docker 部署 (推荐用于生产环境)
-+
-+本项目已包含 Docker 配置，支持使用 Docker Compose 进行容器化部署。
-+
-+**环境要求:**
-+- Docker
-+- Docker Compose
-+
-+**部署步骤:**
-+
-+1.  **构建 Docker 镜像 (在项目根目录 `NovelFlow/` 下执行)**
-+    首先，您需要在本地构建应用的 Docker 镜像。
-+    ```bash
-+    docker build -t your-dockerhub-username/novelflow-app:latest ./novel-writing-platform
-+    ```
-+    *   将 `your-dockerhub-username` 替换为您的 Docker Hub 用户名或其他容器注册表的用户名/项目名称。
-+    *   `:latest` 是镜像标签，建议在生产环境中使用版本号 (例如 `:v1.0`)。
-+
-+2.  **登录并推送镜像到容器注册表 (可选，但推荐)**
-+    如果您计划在多台服务器部署或使用云服务，建议将镜像推送到容器注册表 (如 Docker Hub)。
-+    ```bash
-+    docker login
-+    docker push your-dockerhub-username/novelflow-app:latest
-+    ```
-+
-+3.  **准备部署文件 (在云服务器上)**
-+    在您的云服务器上创建一个项目目录 (例如 `/opt/novelflow`)，并将以下文件上传到该目录：
-+    *   `docker-compose.yml` (位于 `NovelFlow/` 根目录)
-+    *   `.env` (您需要根据云服务器环境创建和配置此文件，例如数据库连接字符串、`NEXT_PUBLIC_URL` 应设置为服务器的公共 IP 或域名)
-+
-+4.  **修改 `docker-compose.yml` (在云服务器上)**
-+    编辑云服务器上的 `docker-compose.yml`，将 `app` 服务的 `build` 部分替换为 `image`，指向您推送到注册表的镜像。
-+    ```yaml
-+    # ...
-+    app:
-+      image: your-dockerhub-username/novelflow-app:latest # 修改为您的镜像
-+    # ...
-+    ```
-+
-+5.  **启动 Docker Compose 服务 (在云服务器上)**
-+    在云服务器的项目目录下 (例如 `/opt/novelflow`) 执行以下命令启动服务：
-+    ```bash
-+    docker-compose up -d
-+    ```
-+    *   `-d` 标志表示在后台运行容器。
-+
-+6.  **访问应用**
-+    打开浏览器访问 `http://<您的云服务器IP或域名>:5000`。
-+
- ### 手动安装步骤
- 
- 如果一键安装脚本出现问题，可以尝试手动安装：
-
-### 总结
-
-总体而言，NovelFlow 小说创作平台是一个功能完整、设计现代化的应用。核心功能均已实现，包括用户认证、小说管理、写作编辑、AI辅助创作等。代码结构清晰，采用了Next.js、React、Prisma等现代技术栈。虽然在测试过程中遇到了一些环境配置问题，但这些都可以通过正确的配置来解决。
+NovelFlow 小说创作平台是一个功能完整、设计现代化的应用。核心功能均已实现，包括用户认证、小说管理、写作编辑、AI辅助创作等。代码结构清晰，采用了Next.js、React、Prisma等现代技术栈。虽然在测试过程中遇到了一些环境配置问题，但这些都可以通过正确的配置来解决。
 
 平台的响应式设计确保了在不同设备上的良好体验，AI辅助功能为用户提供了强大的创作支持，整体设计符合现代Web应用的标准和用户体验要求。
 
