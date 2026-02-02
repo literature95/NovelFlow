@@ -76,14 +76,16 @@ NovelFlow/
 └── .cozeproj/                      # 部署配置
 ```
 
-## 🚀 快速开始
 
-### 环境要求
+
+## 环境要求
 - Node.js 18.x 或更高版本
 - PostgreSQL 14.x 或更高版本
 - Git
+## 部署
 
-### 一键安装（推荐）
+本项目**支持 Vercel、Docker 和 Cloudflare** 部署。
+### 一键安装（本地部署）
 
 我们提供了一键安装脚本，简化依赖安装过程：
 
@@ -124,25 +126,57 @@ npm run dev
 
 #### 本地开发部署
 
-如果您只是想在本地环境快速体验完整功能，可以使用以下步骤：
+项目提供了 Dockerfile 和 docker-compose.yml 文件，支持通过 Docker 进行部署。
 
-1.  **准备环境变量文件**
-    在项目根目录创建 `.env` 文件并配置必要的环境变量：
-    ```bash
-    cp .env.example .env
-    # 编辑 .env 文件，配置数据库连接、AI API 密钥等
-    ```
+1. **构建 Docker 镜像 (如果需要自定义或本地构建)**
 
-2.  **启动服务**
-    在项目根目录执行以下命令启动所有服务：
-    ```bash
-    docker-compose up --build
-    ```
-    *   `--build` 标志表示每次启动时重新构建镜像
-    *   如果不需要重新构建，可以使用 `docker-compose up -d` 在后台运行
+首先，您需要进入 novel-writing-platform 目录：
 
-3.  **访问应用**
-    服务启动后，打开浏览器访问：`http://localhost:5000`
+```
+cd c:\Users\10153\OneDrive\桌面
+\NovelFlow\novel-writing-platform
+```
+然后，可以使用以下命令构建 Docker 镜像：
+
+```
+docker build -t novel-flow .
+```
+2. **运行 Docker 容器 (使用 docker-compose )**
+
+项目根目录下有一个 docker-compose.yml 文件，可以用来启动整个服务，包括数据库。
+
+首先，确保您在 c:\Users\10153\OneDrive\桌面\NovelFlow 目录下。
+
+```
+cd c:\Users\10153\OneDrive\桌面\NovelFlow
+```
+然后，运行 Docker Compose：
+
+```
+docker-compose up -d
+```
+这会启动 novel-writing-platform 服务以及其依赖的数据库。
+
+3. **访问应用**
+
+服务启动后，您可以通过 `http://localhost:5000` 访问 NovelFlow 应用。
+
+
+
+### Vercel 部署
+
+
+1. Fork 仓库 ：将 NovelFlow/novel-writing-platform 仓库 Fork 到您的 GitHub 账户。
+2. 连接 Vercel ：登录 Vercel，创建一个新项目，并连接到您 Fork 的 GitHub 仓库。
+3. 配置环境变量 ：Vercel 会自动检测 Next.js 项目。您可能需要配置一些环境变量，例如数据库连接字符串（如果使用外部数据库服务，如 PostgreSQL 或 MongoDB Atlas）和 AI API 密钥。
+4. 部署 ：Vercel 会自动构建并部署您的 Next.js 应用。
+### Cloudflare Pages 部署
+
+1. Fork 仓库 ：将 NovelFlow/novel-writing-platform 仓库 Fork 到您的 GitHub 账户。
+2. 连接 Cloudflare Pages ：登录 Cloudflare，进入 Pages 服务，创建一个新项目，并连接到您 Fork 的 GitHub 仓库。
+3. 构建命令 ：Cloudflare Pages 也会自动检测 Next.js 项目。您可能需要确认或设置构建命令（通常是 npm run build 或 pnpm run build ，取决于您使用的包管理器）和输出目录（通常是 .next ）。
+4. 配置环境变量 ：与 Vercel 类似，您需要配置数据库连接字符串和 AI API 密钥等环境变量。
+5. 部署 ：Cloudflare Pages 会自动构建并部署您的 Next.js 应用。
 
 ## 📖 使用指南
 
@@ -165,19 +199,7 @@ npm run dev
 3. 填写角色基本信息（姓名、性别、年龄、性格等）
 4. 使用 AI 助手扩展角色背景
 
-## 🤝 贡献指南
 
-我们欢迎社区贡献！如果您想参与项目开发，请参考以下步骤：
-
-1. Fork 仓库
-2. 创建特性分支（`git checkout -b feature/AmazingFeature`）
-3. 提交更改（`git commit -m 'Add some AmazingFeature'`）
-4. 推送到分支（`git push origin feature/AmazingFeature`）
-5. 开启 Pull Request
-
-## 📄 许可证
-
-本项目采用 MIT 许可证。
 
 ## 📊 项目状态
 
@@ -190,59 +212,5 @@ npm run dev
 - 🔄 多语言支持开发中
 - 🔄 插件系统开发中
 
-## 🧪 测试报告
-
-### 已测试功能
-
-1. **网站首页**
-   - ✅ 响应式设计适配不同屏幕尺寸
-   - ✅ 现代化CSS渐变和动画效果
-   - ✅ 清晰的功能模块布局
-
-2. **用户注册功能**
-   - ✅ 完整的表单验证（邮箱、用户名、密码）
-   - ✅ 详细的错误信息和用户建议
-   - ✅ 移动端优化支持
-   - ✅ 密码加密存储
-
-3. **用户登录功能**
-   - ✅ 普通用户和管理员登录支持
-   - ✅ 密码验证和错误处理
-   - ✅ 登录后跳转到仪表盘
-   - ✅ JWT令牌生成和存储
-
-4. **小说管理功能**
-   - ✅ 创建新小说（标题、描述、大纲等）
-   - ✅ 章节管理（创建、编辑、删除、重排序）
-   - ✅ 人物和世界观设置
-   - ✅ 小说详情和统计信息
-
-5. **写作编辑器**
-   - ✅ 沉浸式编辑体验
-   - ✅ 自动保存功能
-   - ✅ 写作工具栏和格式选项
-
-6. **AI助手功能**
-   - ✅ AI辅助创作集成
-   - ✅ 多种AI模型配置
-   - ✅ AI生成章节内容
-
-7. **管理员功能**
-   - ✅ 管理员登录界面
-   - ✅ 用户和小说管理
-   - ✅ 统计信息和备份功能
-
-### 环境配置
-
-- ✅ 成功安装项目依赖
-- ✅ 创建了必要的 .env 配置文件
-- ✅ 启动了开发服务器（端口5000）
-- ✅ 配置了数据库连接
-
-NovelFlow 小说创作平台是一个功能完整、设计现代化的应用。核心功能均已实现，包括用户认证、小说管理、写作编辑、AI辅助创作等。代码结构清晰，采用了Next.js、React、Prisma等现代技术栈。虽然在测试过程中遇到了一些环境配置问题，但这些都可以通过正确的配置来解决。
-
-平台的响应式设计确保了在不同设备上的良好体验，AI辅助功能为用户提供了强大的创作支持，整体设计符合现代Web应用的标准和用户体验要求。
-
----
 
 **NovelFlow - 让创作更流畅** 🚀
