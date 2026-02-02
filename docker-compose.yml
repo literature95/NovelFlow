@@ -18,8 +18,8 @@ services:
       - "5000:5000"
     environment:
       NODE_ENV: production
-      DATABASE_URL: "postgresql://postgres:postgres@db:5432/novel"
-      NEXT_PUBLIC_URL: "http://localhost:5000"
+    env_file:
+      - .env
     depends_on:
       - db
 

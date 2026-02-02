@@ -119,6 +119,55 @@ npm run dev
 5. **访问应用**
 打开浏览器访问 http://localhost:5000
 
+### 🐳 Docker 部署 (推荐用于生产环境)
+
+本项目已包含 Docker 配置，支持使用 Docker Compose 进行容器化部署。
+
+**环境要求:**
+- Docker
+- Docker Compose
+
+**部署步骤:**
+
+1.  **构建 Docker 镜像 (在项目根目录 `NovelFlow/` 下执行)**
+    首先，您需要在本地构建应用的 Docker 镜像。
+    ```bash
+    docker build -t your-dockerhub-username/novelflow-app:latest ./novel-writing-platform
+    ```
+    *   将 `your-dockerhub-username` 替换为您的 Docker Hub 用户名或其他容器注册表的用户名/项目名称。
+    *   `:latest` 是镜像标签，建议在生产环境中使用版本号 (例如 `:v1.0`)。
+
+2.  **登录并推送镜像到容器注册表 (可选，但推荐)**
+    如果您计划在多台服务器部署或使用云服务，建议将镜像推送到容器注册表 (如 Docker Hub)。
+    ```bash
+    docker login
+    docker push your-dockerhub-username/novelflow-app:latest
+    ```
+
+3.  **准备部署文件 (在云服务器上)**
+    在您的云服务器上创建一个项目目录 (例如 `/opt/novelflow`)，并将以下文件上传到该目录：
+    *   `docker-compose.yml` (位于 `NovelFlow/` 根目录)
+    *   `.env` (您需要根据云服务器环境创建和配置此文件，例如数据库连接字符串、`NEXT_PUBLIC_URL` 应设置为服务器的公共 IP 或域名)
+
+4.  **修改 `docker-compose.yml` (在云服务器上)**
+    编辑云服务器上的 `docker-compose.yml`，将 `app` 服务的 `build` 部分替换为 `image`，指向您推送到注册表的镜像。
+    ```yaml
+    # ...
+    app:
+      image: your-dockerhub-username/novelflow-app:latest # 修改为您的镜像
+    # ...
+    ```
+
+5.  **启动 Docker Compose 服务 (在云服务器上)**
+    在云服务器的项目目录下 (例如 `/opt/novelflow`) 执行以下命令启动服务：
+    ```bash
+    docker-compose up -d
+    ```
+    *   `-d` 标志表示在后台运行容器。
+
+6.  **访问应用**
+    打开浏览器访问 `http://<您的云服务器IP或域名>:5000`。
+
 ### 手动安装步骤
 
 如果一键安装脚本出现问题，可以尝试手动安装：
@@ -249,19 +298,64 @@ npm run dev
 - ✅ 启动了开发服务器（端口5000）
 - ✅ 配置了数据库连接
 
-### 发现的问题和建议
-
-1. **环境变量配置**
-   - 需要手动创建 .env 文件
-   - 密钥需要设置足够长度（建议32+字符）
-
-2. **数据库迁移**
-   - 需要确保数据库连接正常
-   - 首次运行时可能需要执行迁移命令
-
-3. **测试工具兼容性**
-   - Windows环境下测试API需要使用PowerShell特定命令
-   - 建议使用Postman或类似工具进行API测试
+--- c:\Users\10153\OneDrive\桌面\NovelFlow\README.md
++++ c:\Users\10153\OneDrive\桌面\NovelFlow\README.md
+@@ -107,6 +107,46 @@
+ 5. **访问应用**
+ 打开浏览器访问 http://localhost:5000
+ 
++### 🐳 Docker 部署 (推荐用于生产环境)
++
++本项目已包含 Docker 配置，支持使用 Docker Compose 进行容器化部署。
++
++**环境要求:**
++- Docker
++- Docker Compose
++
++**部署步骤:**
++
++1.  **构建 Docker 镜像 (在项目根目录 `NovelFlow/` 下执行)**
++    首先，您需要在本地构建应用的 Docker 镜像。
++    ```bash
++    docker build -t your-dockerhub-username/novelflow-app:latest ./novel-writing-platform
++    ```
++    *   将 `your-dockerhub-username` 替换为您的 Docker Hub 用户名或其他容器注册表的用户名/项目名称。
++    *   `:latest` 是镜像标签，建议在生产环境中使用版本号 (例如 `:v1.0`)。
++
++2.  **登录并推送镜像到容器注册表 (可选，但推荐)**
++    如果您计划在多台服务器部署或使用云服务，建议将镜像推送到容器注册表 (如 Docker Hub)。
++    ```bash
++    docker login
++    docker push your-dockerhub-username/novelflow-app:latest
++    ```
++
++3.  **准备部署文件 (在云服务器上)**
++    在您的云服务器上创建一个项目目录 (例如 `/opt/novelflow`)，并将以下文件上传到该目录：
++    *   `docker-compose.yml` (位于 `NovelFlow/` 根目录)
++    *   `.env` (您需要根据云服务器环境创建和配置此文件，例如数据库连接字符串、`NEXT_PUBLIC_URL` 应设置为服务器的公共 IP 或域名)
++
++4.  **修改 `docker-compose.yml` (在云服务器上)**
++    编辑云服务器上的 `docker-compose.yml`，将 `app` 服务的 `build` 部分替换为 `image`，指向您推送到注册表的镜像。
++    ```yaml
++    # ...
++    app:
++      image: your-dockerhub-username/novelflow-app:latest # 修改为您的镜像
++    # ...
++    ```
++
++5.  **启动 Docker Compose 服务 (在云服务器上)**
++    在云服务器的项目目录下 (例如 `/opt/novelflow`) 执行以下命令启动服务：
++    ```bash
++    docker-compose up -d
++    ```
++    *   `-d` 标志表示在后台运行容器。
++
++6.  **访问应用**
++    打开浏览器访问 `http://<您的云服务器IP或域名>:5000`。
++
+ ### 手动安装步骤
+ 
+ 如果一键安装脚本出现问题，可以尝试手动安装：
 
 ### 总结
 
