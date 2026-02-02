@@ -42,11 +42,14 @@ NovelFlow 是一个集 **AI 辅助写作**、**小说管理**、**角色设计**
 
 | 分类 | 主要依赖 |
 |---|---|
-| 前端框架 | Next.js 14 · App Router |
-| UI & 样式 | Tailwind CSS 3 |
-| 语言 | TypeScript 4 |
-| 播放器 | ArtPlayer · HLS.js |
-| 代码质量 | ESLint · Prettier · Jest |
+| 前端框架 | Next.js 16 · App Router |
+| UI & 样式 | React · Tailwind CSS 4 |
+| 语言 | TypeScript 5 |
+| 数据库 | PostgreSQL · SQLite |
+| ORM | Prisma 5 |
+| 认证 | JWT · NextAuth |
+| AI 服务 | LangChain · OpenAI 兼容接口 |
+| 代码质量 | ESLint · Prettier |
 | 部署 | Docker · Vercel · CloudFlare pages |
 
 ## 📁 项目结构
