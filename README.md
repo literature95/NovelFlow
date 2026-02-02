@@ -40,22 +40,14 @@ NovelFlow 是一个集 **AI 辅助写作**、**小说管理**、**角色设计**
 
 ## 🛠️ 技术栈
 
-### 前端
-- **框架**：Next.js 14
-- **UI 组件**：React + Tailwind CSS
-- **状态管理**：React Hooks
-- **路由**：App Router
-
-### 后端
-- **API**：Next.js API Routes
-- **数据库**：PostgreSQL
-- **ORM**：Prisma
-- **认证**：JWT
-
-### AI 服务
-- **模型**：支持多种 AI 模型
-- **接口**：OpenAI 兼容接口
-- **功能**：章节生成、角色分析、世界观扩展
+| 分类 | 主要依赖 |
+|---|---|
+| 前端框架 | Next.js 14 · App Router |
+| UI & 样式 | Tailwind CSS 3 |
+| 语言 | TypeScript 4 |
+| 播放器 | ArtPlayer · HLS.js |
+| 代码质量 | ESLint · Prettier · Jest |
+| 部署 | Docker · Vercel · CloudFlare pages |
 
 ## 📁 项目结构
 
