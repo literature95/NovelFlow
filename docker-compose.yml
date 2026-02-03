@@ -1,27 +1,39 @@
 version: '3.8'
-services:
-  db:
-    image: postgres:15
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: novel
-    volumes:
-      - db-data:/var/lib/postgresql/data
 
-  app:
+services:
+  novelflow-app:
     build:
       context: ./novel-writing-platform
       dockerfile: Dockerfile
+    container_name: novelflow-app
     ports:
       - "5000:5000"
     environment:
-      NODE_ENV: production
-    env_file:
-      - .env
-    depends_on:
-      - db
+      - NODE_ENV=production
+      - DATABASE_URL=file:./dev.db
+      - NEXTAUTH_URL=http://localhost:5000
+      - DOCKER_ENV=true
+    volumes:
+      # 持久化数据库文件
+      - novelflow_db_data:/app/dev.db
+      # 持久化日志文件
+      - novelflow_logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:5000/api/test-api"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - novelflow-network
 
 volumes:
-  db-data:
+  novelflow_db_data:
+    driver: local
+  novelflow_logs:
+    driver: local
+
+networks:
+  novelflow-network:
+    driver: bridge

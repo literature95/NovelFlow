@@ -47,7 +47,7 @@ export async function GET(
       categorizedSettings[category] = []
     })
     
-    novel.worldSettings.forEach(setting => {
+    novel.worldSettings.forEach((setting: any) => {
       const category = categorizedSettings[setting.category] || categorizedSettings['其他']
       category.push(setting)
     })
