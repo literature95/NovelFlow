@@ -44,14 +44,14 @@ export async function GET(
 
     // 计算统计数据
     const chapters = novel.chapters
-    const totalWords = chapters.reduce((sum, chapter) => {
+    const totalWords = chapters.reduce((sum: number, chapter: { content: string | null; status: string }) => {
       const wordCount = chapter.content ? chapter.content.length : 0
       return sum + wordCount
     }, 0)
 
-    const publishedChapters = chapters.filter(ch => ch.status === 'published').length
-    const draftChapters = chapters.filter(ch => ch.status === 'draft').length
-    const archivedChapters = chapters.filter(ch => ch.status === 'archived').length
+    const publishedChapters = chapters.filter((ch: { status: string }) => ch.status === 'published').length
+    const draftChapters = chapters.filter((ch: { status: string }) => ch.status === 'draft').length
+    const archivedChapters = chapters.filter((ch: { status: string }) => ch.status === 'archived').length
 
     const averageWordsPerChapter = chapters.length > 0 ? Math.round(totalWords / chapters.length) : 0
     const totalReadingTime = Math.ceil(totalWords / 200) // 假设每分钟阅读200字

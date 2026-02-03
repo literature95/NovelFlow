@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
       console.log('[Admin Stats] 数据 - 用户:', totalUsers, '小说:', totalNovels, '章节:', totalChapters)
 
       // 计算总字数：优先使用wordCount，如果没有则根据content长度估算
-      const totalWords = chaptersWithContent.reduce((total, chapter) => {
+      const totalWords = chaptersWithContent.reduce((total: number, chapter: { wordCount: number | null; content: string | null }) => {
         if (chapter.wordCount && chapter.wordCount > 0) {
           return total + chapter.wordCount
         }
