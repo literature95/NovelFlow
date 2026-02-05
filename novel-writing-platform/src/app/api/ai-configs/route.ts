@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getCurrentUser } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 
 export async function GET(request: NextRequest) {
   try {
@@ -47,7 +48,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 如果设置为激活，先取消其他配置的激活状态
-    const configData: any = {
+    const configData: Prisma.AIConfigCreateInput = {
       name,
       apiKey,
       model,

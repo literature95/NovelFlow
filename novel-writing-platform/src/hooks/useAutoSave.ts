@@ -2,13 +2,13 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 
 type SavingStatus = 'idle' | 'saving' | 'saved' | 'error'
 
-interface AutoSaveOptions {
+interface AutoSaveOptions<T> {
   delay?: number // 自动保存延迟时间（毫秒）
-  onSave?: (data: any) => Promise<void>
-  deps?: any[] // 依赖项数组，当这些值改变时触发自动保存
+  onSave?: (data: T) => Promise<void>
+  deps?: React.DependencyList // 依赖项数组，当这些值改变时触发自动保存
 }
 
-export function useAutoSave<T>(data: T, options: AutoSaveOptions = {}) {
+export function useAutoSave<T>(data: T, options: AutoSaveOptions<T> = {}) {
   const { delay = 2000, onSave, deps = [] } = options
   const [savingStatus, setSavingStatus] = useState<SavingStatus>('idle')
   const [lastSavedData, setLastSavedData] = useState<T>(data)
@@ -98,7 +98,7 @@ export function useAutoSave<T>(data: T, options: AutoSaveOptions = {}) {
 }
 
 // 用于章节编辑的自动保存Hook
-export function useChapterAutoSave(chapterId: string, initialData: any) {
+export function useChapterAutoSave<T>(chapterId: string, initialData: T) {
   const [data, setData] = useState(initialData)
   
   const { savingStatus, save, hasUnsavedChanges } = useAutoSave(data, {
@@ -122,8 +122,8 @@ export function useChapterAutoSave(chapterId: string, initialData: any) {
     }
   })
 
-  const updateData = useCallback((newData: Partial<any>) => {
-    setData((prev: any) => ({ ...prev, ...newData }))
+  const updateData = useCallback((newData: Partial<T>) => {
+    setData((prev: T) => ({ ...prev, ...newData }))
   }, [])
 
   return {
@@ -136,7 +136,7 @@ export function useChapterAutoSave(chapterId: string, initialData: any) {
 }
 
 // 用于小说设置保存的Hook
-export function useNovelAutoSave(novelId: string, initialData: any) {
+export function useNovelAutoSave<T>(novelId: string, initialData: T) {
   const [data, setData] = useState(initialData)
   
   const { savingStatus, save, hasUnsavedChanges } = useAutoSave(data, {
@@ -160,8 +160,8 @@ export function useNovelAutoSave(novelId: string, initialData: any) {
     }
   })
 
-  const updateData = useCallback((newData: Partial<any>) => {
-    setData((prev: any) => ({ ...prev, ...newData }))
+  const updateData = useCallback((newData: Partial<T>) => {
+    setData((prev: T) => ({ ...prev, ...newData }))
   }, [])
 
   return {

@@ -43,6 +43,8 @@ interface User {
   }
 }
 
+type UserInput = Omit<User, 'id' | 'createdAt' | 'updatedAt' | '_count'>
+
 // 小说类型定义
 interface Novel {
   id: string
@@ -67,6 +69,8 @@ interface Novel {
   }
 }
 
+type NovelInput = Omit<Novel, 'id' | 'createdAt' | 'updatedAt' | 'user' | '_count'> & { userId: string }
+
 export default function AdminPage() {
   const [stats, setStats] = useState({
     totalUsers: 0,
@@ -80,7 +84,7 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('overview')
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
   const [users, setUsers] = useState<User[]>([])
   const [novels, setNovels] = useState<Novel[]>([])
   const [userPagination, setUserPagination] = useState({ page: 1, total: 0, totalPages: 0 })
@@ -313,7 +317,7 @@ export default function AdminPage() {
     }
   }
 
-  const handleSaveUser = async (userData: any) => {
+  const handleSaveUser = async (userData: UserInput) => {
     try {
       const token = localStorage.getItem('token')
       const url = editingUser
@@ -346,7 +350,7 @@ export default function AdminPage() {
     }
   }
 
-  const handleSaveNovel = async (novelData: any) => {
+  const handleSaveNovel = async (novelData: NovelInput) => {
     try {
       const token = localStorage.getItem('token')
       const url = editingNovel
@@ -1083,7 +1087,7 @@ export default function AdminPage() {
 }
 
 // 用户表单组件
-function UserForm({ user, onSave, onCancel }: { user: User | null; onSave: (data: any) => void; onCancel: () => void }) {
+function UserForm({ user, onSave, onCancel }: { user: User | null; onSave: (data: UserInput) => void; onCancel: () => void }) {
   const [formData, setFormData] = useState({
     email: user?.email || '',
     username: user?.username || '',
@@ -1208,7 +1212,7 @@ function UserForm({ user, onSave, onCancel }: { user: User | null; onSave: (data
 }
 
 // 小说表单组件
-function NovelForm({ novel, users, onSave, onCancel }: { novel: Novel | null; users: User[]; onSave: (data: any) => void; onCancel: () => void }) {
+function NovelForm({ novel, users, onSave, onCancel }: { novel: Novel | null; users: User[]; onSave: (data: NovelInput) => void; onCancel: () => void }) {
   const [formData, setFormData] = useState({
     title: novel?.title || '',
     description: novel?.description || '',

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Prisma } from '@prisma/client'
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient }
 const prisma = globalForPrisma.prisma || new PrismaClient()
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     const skip = (page - 1) * limit
 
     // 构建查询条件
-    const where: any = {}
+    const where: Prisma.NovelWhereInput = {}
 
     if (search) {
       where.OR = [

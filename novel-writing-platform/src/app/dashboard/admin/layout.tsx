@@ -9,30 +9,35 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode
 }) {
-  const [user, setUser] = useState<any>(null)
   const router = useRouter()
 
-  useEffect(() => {
-    // 验证admin身份
+  // Initialize user state from localStorage
+  const [user, setUser] = useState<{id: string; username: string; email: string; role: string} | null>(() => {
+    if (typeof window === 'undefined') return null
+
     const storedUser = localStorage.getItem('user')
     const storedToken = localStorage.getItem('token')
-    
+
     if (!storedUser || !storedToken) {
-      router.push('/admin/login')
-      return
+      return null
     }
 
     try {
       const userData = JSON.parse(storedUser)
       if (userData.role !== 'admin') {
-        router.push('/login')
-        return
+        return null
       }
-      setUser(userData)
-    } catch (err) {
+      return userData
+    } catch (_err) {
+      return null
+    }
+  })
+
+  useEffect(() => {
+    if (!user) {
       router.push('/admin/login')
     }
-  }, [router])
+  }, [user, router])
 
   if (!user) {
     return (

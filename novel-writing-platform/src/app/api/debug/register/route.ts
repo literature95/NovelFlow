@@ -63,11 +63,11 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
       requestId: `debug_reg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       processingTime: 0,
-      steps: [] as any[],
+      steps: [] as Array<{step: number; name: string; status: string; data: Record<string, unknown>}>,
       success: false,
       error: null as string | null,
       jwtToken: null as string | null,
-      userData: null as any
+      userData: null as Record<string, unknown> | null
     }
 
     // 步骤1: 输入验证

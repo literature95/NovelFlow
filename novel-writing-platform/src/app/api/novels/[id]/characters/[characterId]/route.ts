@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Prisma } from '@prisma/client'
 import { verifyToken } from '@/lib/auth'
 
 const prisma = new PrismaClient()
@@ -97,7 +97,7 @@ export async function PUT(
 
     const { name, description, avatarUrl, traits, relationships } = await request.json()
 
-    const updateData: any = {}
+    const updateData: Prisma.CharacterUpdateInput = {}
     if (name !== undefined) updateData.name = name
     if (description !== undefined) updateData.description = description
     if (avatarUrl !== undefined) updateData.avatarUrl = avatarUrl

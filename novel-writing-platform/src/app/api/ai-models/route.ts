@@ -64,8 +64,9 @@ export async function POST(request: NextRequest) {
     })
 
     return NextResponse.json({ model: newModel }, { status: 201 })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('创建AI模型失败:', error)
-    return NextResponse.json({ error: `创建AI模型失败: ${error.message}` }, { status: 500 })
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    return NextResponse.json({ error: `创建AI模型失败: ${errorMessage}` }, { status: 500 })
   }
 }

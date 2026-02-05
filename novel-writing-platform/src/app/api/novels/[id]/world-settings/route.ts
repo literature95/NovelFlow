@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Prisma } from '@prisma/client'
 import { verifyToken } from '@/lib/auth'
 
 const prisma = new PrismaClient()
@@ -47,7 +47,7 @@ export async function GET(
       categorizedSettings[category] = []
     })
     
-    novel.worldSettings.forEach((setting: any) => {
+    novel.worldSettings.forEach((setting: Prisma.WorldSettingGetPayload<{}>) => {
       const category = categorizedSettings[setting.category] || categorizedSettings['其他']
       category.push(setting)
     })

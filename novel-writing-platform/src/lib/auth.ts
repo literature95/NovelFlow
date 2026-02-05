@@ -2,6 +2,13 @@ import jwt from 'jsonwebtoken'
 import { NextRequest } from 'next/server'
 import { prisma } from './prisma'
 
+type User = {
+  userId: string
+  username: string
+  email: string
+  role: string
+}
+
 export function getTokenFromRequest(request: NextRequest): string | null {
   const authHeader = request.headers.get('Authorization')
   if (authHeader && authHeader.startsWith('Bearer ')) {
@@ -16,17 +23,17 @@ export function getTokenFromRequest(request: NextRequest): string | null {
   return null
 }
 
-export function verifyToken(token: string): any {
+export function verifyToken(token: string): unknown {
   try {
     return jwt.verify(token, process.env.NEXTAUTH_SECRET!)
-  } catch (error) {
+  } catch (_error) {
     return null
   }
 }
 
-let cachedDemoUser: any = null
+let cachedDemoUser: User | null = null
 
-export async function getCurrentUser(request: NextRequest): Promise<any> {
+export async function getCurrentUser(_request: NextRequest): Promise<User> {
   // 如果已有缓存的虚拟用户，直接返回
   if (cachedDemoUser) {
     console.log('getCurrentUser: 返回缓存的虚拟用户数据')
@@ -53,8 +60,8 @@ export async function getCurrentUser(request: NextRequest): Promise<any> {
       console.log('getCurrentUser: 返回数据库用户数据', user.username)
       return cachedDemoUser
     }
-  } catch (error) {
-    console.error('获取默认用户失败:', error)
+  } catch (_error) {
+    console.error('获取默认用户失败:', _error)
   }
 
   // 如果数据库中没有用户，返回默认虚拟用户

@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     console.log('导入数据统计:', backupData.statistics)
 
     // 开始导入数据（注意：由于外键约束，需要按顺序导入）
-    let importResults: any = {}
+    const importResults: Record<string, number> = {}
 
     try {
       // 1. 导入用户数据

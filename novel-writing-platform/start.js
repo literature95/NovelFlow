@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-/* eslint-disable no-console,@typescript-eslint/no-var-requires */
+ 
 const { execSync } = require('child_process');
 const http = require('http');
 

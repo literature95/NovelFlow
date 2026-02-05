@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     })
 
     // 构建消息
-    const messages: any[] = [
+    const messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
       { role: 'system', content: model.role }
     ]
 
@@ -49,11 +49,11 @@ export async function POST(request: NextRequest) {
     const response = completion.choices[0]?.message?.content || '无回复'
 
     return NextResponse.json({ response })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('测试AI模型失败:', error)
 
     let errorMessage = '测试失败'
-    if (error.message) {
+    if (error instanceof Error && error.message) {
       if (error.message.includes('401')) {
         errorMessage = 'API密钥无效'
       } else if (error.message.includes('404')) {

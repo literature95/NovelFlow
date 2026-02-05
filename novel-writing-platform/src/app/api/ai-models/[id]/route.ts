@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getCurrentUser } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 
 // 获取单个AI模型
 export async function GET(
@@ -54,7 +55,7 @@ export async function PUT(
       return NextResponse.json({ error: '模型不存在' }, { status: 404 })
     }
 
-    const updateData: any = {}
+    const updateData: Partial<Prisma.AIConfigUpdateInput> = {}
     if (name !== undefined) updateData.name = name
     if (apiKey !== undefined) updateData.apiKey = apiKey
     if (baseUrl !== undefined) updateData.baseUrl = baseUrl

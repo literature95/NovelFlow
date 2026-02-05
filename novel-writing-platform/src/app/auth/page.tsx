@@ -7,14 +7,12 @@ import Link from 'next/link'
 export default function AuthPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
-  const [from, setFrom] = useState('')
 
   useEffect(() => {
     const token = localStorage.getItem('token')
     const urlParams = new URLSearchParams(window.location.search)
     const fromPath = urlParams.get('from') || '/dashboard'
-    setFrom(fromPath)
-    
+
     setIsLoading(false)
     if (token) {
       router.push(fromPath)

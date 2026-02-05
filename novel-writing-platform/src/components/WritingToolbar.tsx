@@ -208,7 +208,7 @@ export default function WritingToolbar({
   }
 
   const exportContent = (format: 'txt' | 'md' | 'docx') => {
-    let exportContent = content
+    const exportContent = content
     let filename = `writing_${new Date().toISOString().split('T')[0]}`
     let mimeType = 'text/plain'
 

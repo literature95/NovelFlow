@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Prisma } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient }
@@ -81,7 +81,7 @@ export async function PUT(
     }
 
     // 构建更新数据
-    const updateData: any = {}
+    const updateData: Prisma.UserUpdateInput = {}
 
     if (email && email !== existingUser.email) {
       // 检查邮箱是否已被其他用户使用

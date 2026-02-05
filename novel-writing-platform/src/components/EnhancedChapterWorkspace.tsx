@@ -524,7 +524,7 @@ export default function EnhancedChapterWorkspace() {
   const renderMarkdown = (text: string) => {
     if (!text) return ''
     
-    let html = text
+    const html = text
       .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold">$1</strong>')
       .replace(/\*(.*?)\*/g, '<em class="italic">$1</em>')
       .replace(/\n\n/g, '</p><p class="mb-4">')

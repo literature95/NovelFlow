@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     })
 
     // 解析请求体
-    let requestData: any
+    let requestData: Record<string, unknown>
     try {
       const requestText = await request.text()
       console.log(`[${requestId}] 请求体内容长度: ${requestText.length}`)
@@ -82,7 +82,9 @@ export async function POST(request: NextRequest) {
       return response
     }
 
-    const { email, username, password } = requestData
+    const email = typeof requestData.email === 'string' ? requestData.email : ''
+    const username = typeof requestData.username === 'string' ? requestData.username : ''
+    const password = typeof requestData.password === 'string' ? requestData.password : ''
 
     // 输入验证
     if (!email || !username || !password) {

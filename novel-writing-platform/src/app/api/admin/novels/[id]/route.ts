@@ -1,6 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
 
+type NovelUpdateData = {
+  title?: string
+  description?: string
+  outline?: string
+  worldSetting?: string
+  protagonist?: string
+  userId?: string
+}
+
 const globalForPrisma = global as unknown as { prisma: PrismaClient }
 const prisma = globalForPrisma.prisma || new PrismaClient()
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
@@ -90,7 +99,7 @@ export async function PUT(
     }
 
     // 构建更新数据
-    const updateData: any = {}
+    const updateData: NovelUpdateData = {}
     if (title !== undefined) updateData.title = title
     if (description !== undefined) updateData.description = description
     if (outline !== undefined) updateData.outline = outline

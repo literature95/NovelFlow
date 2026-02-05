@@ -19,7 +19,7 @@ export async function OPTIONS(request: NextRequest) {
   return response
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(_request: NextRequest) {
   const startTime = Date.now()
   const requestId = `login_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
   
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     })
 
     // 解析请求体
-    let requestData: any
+    let requestData: Record<string, unknown>
     try {
       const requestText = await request.text()
       console.log(`[${requestId}] 请求体内容长度: ${requestText.length}`)
@@ -70,7 +70,8 @@ export async function POST(request: NextRequest) {
       return response
     }
 
-    const { email, password } = requestData
+    const email = typeof requestData.email === 'string' ? requestData.email : ''
+    const password = typeof requestData.password === 'string' ? requestData.password : ''
 
     console.log(`[${requestId}] 收到登录请求: email=${email}, password=${password}`)
 

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getCurrentUser } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 
 // GET /api/user/profile - 获取用户个人信息
 export async function GET(request: NextRequest) {
@@ -83,7 +84,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // 构建更新数据
-    const updateData: any = {}
+    const updateData: Prisma.UserUpdateInput = {}
     if (avatar !== undefined) updateData.avatar = avatar
     if (nickname !== undefined) updateData.nickname = nickname
     if (gender !== undefined) updateData.gender = gender

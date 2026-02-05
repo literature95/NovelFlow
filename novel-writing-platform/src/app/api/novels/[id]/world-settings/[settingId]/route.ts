@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Prisma } from '@prisma/client'
 import { verifyToken } from '@/lib/auth'
 
 const prisma = new PrismaClient()
@@ -91,7 +91,7 @@ export async function PUT(
 
     const { title, content, category } = await request.json()
 
-    const updateData: any = {}
+    const updateData: Prisma.WorldSettingUpdateInput = {}
     if (title !== undefined) updateData.title = title
     if (content !== undefined) updateData.content = content
     if (category !== undefined) updateData.category = category

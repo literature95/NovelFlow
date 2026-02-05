@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getCurrentUser } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 
 export async function GET(
   request: NextRequest,
@@ -109,7 +110,7 @@ export async function PUT(
     }
 
     // 更新章节
-    const updateData: any = {
+    const updateData: Partial<Prisma.ChapterUpdateInput> = {
       title: title.trim(),
       summary: summary.trim(),
       updatedAt: new Date()
