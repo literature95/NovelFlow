@@ -42,10 +42,11 @@
 - [核心功能](#核心功能)
 - [技术栈](#技术栈)
 - [项目结构](#项目结构)
+- [系统要求](#系统要求)
+- [环境变量](#环境变量)
 - [部署](#部署)
 - [使用指南](#使用指南)
 - [项目状态](#项目状态)
-- [环境变量](#环境变量)
 - [贡献指南](#贡献指南)
 - [安全与隐私](#安全与隐私)
 - [常见问题](#常见问题)
@@ -73,7 +74,7 @@ NovelFlow 是一款专为作家、创作者和内容团队设计的 AI 辅助小
 - **协作友好**：支持团队协作和版本控制
 - **安全可靠**：数据加密存储，确保创作内容安全
 
-## ️ 技术栈
+## 🛠️ 技术栈
 
 NovelFlow 采用现代化的全栈技术栈，结合性能、可维护性和开发效率进行选型：
 
@@ -205,37 +206,52 @@ NovelFlow 支持使用 Docker 进行容器化部署，适合生产环境和快�
 - Docker 20.10+ (推荐最新稳定版)
 - Docker Compose 2.0+
 
-## 📁 项目结构
 
-```
-NovelFlow/
-├── novel-writing-platform/         # 主应用目录
-│   ├── src/
-│   │   ├── app/                    # Next.js App Router
-│   │   │   ├── api/                # API 路由
-│   │   │   │   ├── ai/             # AI 相关接口
-│   │   │   │   ├── auth/           # 认证相关接口
-│   │   │   │   ├── novels/         # 小说管理接口
-│   │   │   │   └── admin/          # 管理员接口
-│   │   │   ├── dashboard/          # 仪表盘页面
-│   │   │   └── auth/               # 认证页面
-│   │   ├── components/             # 公共组件
-│   │   ├── hooks/                  # 自定义 Hooks
-│   │   ├── lib/                    # 工具函数
-│   │   └── styles/                 # 样式文件
-│   ├── prisma/                     # Prisma 数据库配置
-│   └── public/                     # 静态资源
-├── assets/                         # 项目资源
-└── .cozeproj/                      # 部署配置
-```
+## ⚙️ 系统要求
+- **Node.js** 18.x 或更高版本
+- **PostgreSQL** 14.x 或更高版本（生产环境推荐）
+- **SQLite** 3.40+（开发环境）
+- **Git** 版本控制系统
+- **npm** 或 **yarn** 包管理器
 
+## 🔧 环境变量
 
+NovelFlow 使用环境变量进行配置管理。项目根目录下的 `.env.example` 文件包含了所有可配置的环境变量。
 
-## 环境要求
-- Node.js 18.x 或更高版本
-- PostgreSQL 14.x 或更高版本
-- Git
-## 部署
+### 必需环境变量
+
+| 变量名 | 描述 | 示例值 |
+|--------|------|--------|
+| `DATABASE_URL` | 数据库连接字符串 | `postgresql://user:password@localhost:5432/novelflow` (PostgreSQL)<br>`file:./dev.db` (SQLite) |
+| `NEXTAUTH_URL` | NextAuth 回调 URL | `http://localhost:5000` |
+| `NEXTAUTH_SECRET` | NextAuth 加密密钥 | 使用 `openssl rand -base64 32` 生成 |
+| `OPENAI_API_KEY` | OpenAI API 密钥 | `sk-...` |
+
+### 可选环境变量
+
+| 变量名 | 描述 | 默认值 |
+|--------|------|--------|
+| `NODE_ENV` | 运行环境 | `development` |
+| `PORT` | 应用端口 | `5000` |
+| `AI_MODEL` | 默认 AI 模型 | `gpt-4` |
+| `AI_MAX_TOKENS` | AI 生成最大 tokens | `2000` |
+| `AI_TEMPERATURE` | AI 温度参数 | `0.7` |
+
+### 配置步骤
+
+1. **复制环境变量文件**：
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **编辑 `.env` 文件**，设置您的配置值
+
+3. **安全注意事项**：
+   - 永远不要将 `.env` 文件提交到版本控制
+   - 生产环境使用安全的密钥管理服务
+   - 定期轮换敏感密钥
+
+## 🚀 部署
 
 本项目**支持 Vercel、Docker 和 Cloudflare** 部署。
 ### 📦 本地部署
@@ -604,20 +620,19 @@ docker exec -it novelflow-app sh
 
 
 
-### Vercel 部署
+### 🚀 Vercel 部署
 
+1. **Fork 仓库**：将 NovelFlow/novel-writing-platform 仓库 Fork 到您的 GitHub 账户。
+2. **连接 Vercel**：登录 Vercel，创建一个新项目，并连接到您 Fork 的 GitHub 仓库。
+3. **配置环境变量**：Vercel 会自动检测 Next.js 项目。您可能需要配置一些环境变量，例如数据库连接字符串（如果使用外部数据库服务，如 PostgreSQL 或 MongoDB Atlas）和 AI API 密钥。
+4. **部署**：Vercel 会自动构建并部署您的 Next.js 应用。
+### ☁️ Cloudflare Pages 部署
 
-1. Fork 仓库 ：将 NovelFlow/novel-writing-platform 仓库 Fork 到您的 GitHub 账户。
-2. 连接 Vercel ：登录 Vercel，创建一个新项目，并连接到您 Fork 的 GitHub 仓库。
-3. 配置环境变量 ：Vercel 会自动检测 Next.js 项目。您可能需要配置一些环境变量，例如数据库连接字符串（如果使用外部数据库服务，如 PostgreSQL 或 MongoDB Atlas）和 AI API 密钥。
-4. 部署 ：Vercel 会自动构建并部署您的 Next.js 应用。
-### Cloudflare Pages 部署
-
-1. Fork 仓库 ：将 NovelFlow/novel-writing-platform 仓库 Fork 到您的 GitHub 账户。
-2. 连接 Cloudflare Pages ：登录 Cloudflare，进入 Pages 服务，创建一个新项目，并连接到您 Fork 的 GitHub 仓库。
-3. 构建命令 ：Cloudflare Pages 也会自动检测 Next.js 项目。您可能需要确认或设置构建命令（通常是 npm run build 或 pnpm run build ，取决于您使用的包管理器）和输出目录（通常是 .next ）。
-4. 配置环境变量 ：与 Vercel 类似，您需要配置数据库连接字符串和 AI API 密钥等环境变量。
-5. 部署 ：Cloudflare Pages 会自动构建并部署您的 Next.js 应用。
+1. **Fork 仓库**：将 NovelFlow/novel-writing-platform 仓库 Fork 到您的 GitHub 账户。
+2. **连接 Cloudflare Pages**：登录 Cloudflare，进入 Pages 服务，创建一个新项目，并连接到您 Fork 的 GitHub 仓库。
+3. **构建命令**：Cloudflare Pages 也会自动检测 Next.js 项目。您可能需要确认或设置构建命令（通常是 `npm run build` 或 `pnpm run build`，取决于您使用的包管理器）和输出目录（通常是 `.next`）。
+4. **配置环境变量**：与 Vercel 类似，您需要配置数据库连接字符串和 AI API 密钥等环境变量。
+5. **部署**：Cloudflare Pages 会自动构建并部署您的 Next.js 应用。
 
 ## 📖 使用指南
 
@@ -1054,4 +1069,4 @@ docker logs novelflow-db
 
 ---
 
-*更新日期：2026-02-03*
+*更新日期：2026-02-06*
