@@ -5,31 +5,36 @@ import Link from 'next/link'
 import { 
   BookOpen, 
   Plus, 
-  TrendingUp, 
   Clock, 
   Target, 
   Zap, 
   FileText,
   Edit3,
   BarChart3,
-  Star,
-  Calendar,
   Users,
   Brain,
   Database,
-  Settings,
   Download,
   RefreshCw,
   Shield,
-  Activity
+  Activity,
+  Star,
+  Calendar
 } from 'lucide-react'
+
+interface Novel {
+  id: string
+  title: string
+  description: string
+  updatedAt: string
+}
 
 export default function Workspace() {
   const [stats, setStats] = useState({
     totalNovels: 0,
     totalChapters: 0,
     totalWords: 0,
-    recentNovels: [],
+    recentNovels: [] as Novel[],
     todayWords: 0,
     weekWords: 0,
     streakDays: 0,
@@ -53,44 +58,52 @@ export default function Workspace() {
   const [showAdmin, setShowAdmin] = useState(false)
   const [aiTips, setAiTips] = useState<string[]>([])
 
-  const fetchWorkspaceData = async () => {
+  const refreshData = async () => {
     try {
+      setTimeout(() => setLoading(true), 0)
       // 获取基础统计数据（不需要token）
       const statsResponse = await fetch('/api/user/stats')
       
       if (statsResponse.ok) {
         const data = await statsResponse.json()
-        setStats(prev => ({
-          ...prev,
-          ...data
-        }))
+        setTimeout(() => {
+          setStats(prev => ({
+            ...prev,
+            ...data
+          }))
+        }, 0)
       }
 
       // 获取管理员统计数据
       const adminResponse = await fetch('/api/admin/stats')
       if (adminResponse.ok) {
         const adminData = await adminResponse.json()
-        setAdminStats(adminData)
+        setTimeout(() => setAdminStats(adminData), 0)
       }
 
       // 生成AI写作建议
-      setAiTips([
-        "尝试设定固定的写作时间，养成创作习惯",
-        "大纲是小说的骨架，先构建好框架再填充细节",
-        "人物塑造要立体，给角色设定明确的动机和目标",
-        "多读优秀作品，学习他人的写作技巧和结构安排",
-        "每天坚持写作，即使只是几百字也很重要"
-      ])
+      setTimeout(() => {
+        setAiTips([
+          "尝试设定固定的写作时间，养成创作习惯",
+          "大纲是小说的骨架，先构建好框架再填充细节",
+          "人物塑造要立体，给角色设定明确的动机和目标",
+          "多读优秀作品，学习他人的写作技巧和结构安排",
+          "每天坚持写作，即使只是几百字也很重要"
+        ])
+      }, 0)
 
-      setLoading(false)
+      setTimeout(() => setLoading(false), 0)
     } catch (error) {
       console.error('获取工作台数据失败:', error)
-      setLoading(false)
+      setTimeout(() => setLoading(false), 0)
     }
   }
 
   useEffect(() => {
-    fetchWorkspaceData()
+    const loadInitialData = async () => {
+      await refreshData()
+    }
+    loadInitialData()
   }, [])
 
   const handleBackup = async () => {
@@ -359,7 +372,7 @@ export default function Workspace() {
                   </button>
                   
                   <button
-                    onClick={fetchWorkspaceData}
+                    onClick={refreshData}
                     className="flex items-center justify-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                   >
                     <RefreshCw className="h-4 w-4 mr-2" />
@@ -413,7 +426,7 @@ export default function Workspace() {
                 </Link>
               </div>
               <div className="space-y-3">
-                {stats.recentNovels.slice(0, 3).map((novel: any) => (
+                {stats.recentNovels.slice(0, 3).map((novel: Novel) => (
                   <Link
                     key={novel.id}
                     href={`/dashboard/novels/${novel.id}`}
