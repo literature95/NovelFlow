@@ -19,7 +19,7 @@ export async function OPTIONS(request: NextRequest) {
   return response
 }
 
-export async function POST(_request: NextRequest) {
+export async function POST(request: NextRequest) {
   const startTime = Date.now()
   const requestId = `login_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
   

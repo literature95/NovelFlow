@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
       requestId: `debug_reg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       processingTime: 0,
-      steps: [] as Array<{step: number; name: string; status: string; data: Record<string, unknown>}>,
+      steps: [] as Array<{step: number; name: string; status: string; data?: Record<string, unknown>; error?: string; existingUser?: Record<string, unknown>; secretInfo?: Record<string, unknown>; message?: string}>,
       success: false,
       error: null as string | null,
       jwtToken: null as string | null,

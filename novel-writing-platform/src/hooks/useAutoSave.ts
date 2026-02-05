@@ -13,7 +13,6 @@ export function useAutoSave<T>(data: T, options: AutoSaveOptions<T> = {}) {
   const [savingStatus, setSavingStatus] = useState<SavingStatus>('idle')
   const [lastSavedData, setLastSavedData] = useState<T>(data)
   const saveTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
-  const isDirtyRef = useRef(false)
 
   // 检查数据是否有变化
   const hasChanges = useCallback((current: T, saved: T) => {
@@ -28,7 +27,6 @@ export function useAutoSave<T>(data: T, options: AutoSaveOptions<T> = {}) {
       setSavingStatus('saving')
       await onSave(data)
       setLastSavedData(data)
-      isDirtyRef.current = false
       setSavingStatus('saved')
       
       // 2秒后重置状态
@@ -49,8 +47,6 @@ export function useAutoSave<T>(data: T, options: AutoSaveOptions<T> = {}) {
   // 当数据变化时，设置延迟自动保存
   useEffect(() => {
     if (hasChanges(data, lastSavedData)) {
-      isDirtyRef.current = true
-      
       // 清除之前的定时器
       if (saveTimeoutRef.current) {
         clearTimeout(saveTimeoutRef.current)
@@ -58,9 +54,7 @@ export function useAutoSave<T>(data: T, options: AutoSaveOptions<T> = {}) {
 
       // 设置新的定时器
       saveTimeoutRef.current = setTimeout(() => {
-        if (isDirtyRef.current) {
-          save()
-        }
+        save()
       }, delay)
     }
   }, [data, lastSavedData, delay, hasChanges, save])
@@ -73,12 +67,10 @@ export function useAutoSave<T>(data: T, options: AutoSaveOptions<T> = {}) {
       }
       
       saveTimeoutRef.current = setTimeout(() => {
-        if (isDirtyRef.current) {
-          save()
-        }
+        save()
       }, delay)
     }
-  }, deps)
+  }, [delay, save])
 
   // 清理定时器
   useEffect(() => {
@@ -89,10 +81,13 @@ export function useAutoSave<T>(data: T, options: AutoSaveOptions<T> = {}) {
     }
   }, [])
 
+  // 在渲染期间计算是否有未保存的变化
+  const isDirty = hasChanges(data, lastSavedData)
+
   return {
     savingStatus,
     save,
-    hasUnsavedChanges: isDirtyRef.current,
+    hasUnsavedChanges: isDirty,
     lastSavedData
   }
 }

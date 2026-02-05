@@ -53,10 +53,6 @@ export default function Workspace() {
   const [showAdmin, setShowAdmin] = useState(false)
   const [aiTips, setAiTips] = useState<string[]>([])
 
-  useEffect(() => {
-    fetchWorkspaceData()
-  }, [])
-
   const fetchWorkspaceData = async () => {
     try {
       // 获取基础统计数据（不需要token）
@@ -92,6 +88,10 @@ export default function Workspace() {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    fetchWorkspaceData()
+  }, [])
 
   const handleBackup = async () => {
     try {

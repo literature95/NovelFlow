@@ -18,8 +18,8 @@ export async function GET(
       return NextResponse.json({ error: '未授权' }, { status: 401 })
     }
 
-    const userId = verifyToken(token)
-    if (!userId) {
+    const user = verifyToken(token)
+    if (!user) {
       return NextResponse.json({ error: '无效的令牌' }, { status: 401 })
     }
 
@@ -27,7 +27,7 @@ export async function GET(
     const novel = await prisma.novel.findFirst({
       where: {
         id: novelId,
-        userId: userId
+        userId: user.userId
       },
       include: {
         chapters: {

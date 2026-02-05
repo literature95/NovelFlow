@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
 
     // 构建消息
     const messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
-      { role: 'system', content: model.role }
+      { role: 'system', content: model.role || '' }
     ]
 
     messages.push({ role: 'user', content: prompt })

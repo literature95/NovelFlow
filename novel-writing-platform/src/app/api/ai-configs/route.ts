@@ -55,7 +55,9 @@ export async function POST(request: NextRequest) {
       role,
       temperature: temperature || 0.7,
       maxTokens: maxTokens || 2000,
-      userId: user.userId
+      user: {
+        connect: { id: user.userId }
+      }
     }
 
     const config = await prisma.aIConfig.create({

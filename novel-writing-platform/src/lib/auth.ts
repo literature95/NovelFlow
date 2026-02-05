@@ -23,9 +23,9 @@ export function getTokenFromRequest(request: NextRequest): string | null {
   return null
 }
 
-export function verifyToken(token: string): unknown {
+export function verifyToken(token: string): User | null {
   try {
-    return jwt.verify(token, process.env.NEXTAUTH_SECRET!)
+    return jwt.verify(token, process.env.NEXTAUTH_SECRET!) as User
   } catch (_error) {
     return null
   }
