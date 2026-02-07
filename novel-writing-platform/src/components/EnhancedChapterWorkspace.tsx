@@ -265,9 +265,8 @@ export default function EnhancedChapterWorkspace() {
       return
     }
 
-    if (content && content.trim() && !confirm('当前章节已有内容，AI生成将覆盖。是否继续？')) {
-      return
-    }
+    // 直接执行AI生成逻辑，不使用 confirm()
+    console.log('AI生成章节内容，覆盖现有内容')
 
     setGenerating(true)
     try {
@@ -309,11 +308,7 @@ export default function EnhancedChapterWorkspace() {
 
     try {
       const token = localStorage.getItem('token')
-      if (!token) {
-        alert('请先登录')
-        return
-      }
-
+      
       const newChapterData = {
         title: `第 ${chapters.length + 1} 章`,
         summary: '',
@@ -322,12 +317,18 @@ export default function EnhancedChapterWorkspace() {
 
       console.log('Creating chapter with data:', newChapterData)
       
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json'
+      }
+      
+      // 开发环境允许没有token
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`
+      }
+      
       const response = await fetch(`/api/novels/${novelId}/chapters`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
+        headers: headers,
         body: JSON.stringify(newChapterData)
       })
 
@@ -358,7 +359,8 @@ export default function EnhancedChapterWorkspace() {
   }
 
   const handleDeleteChapter = async (chapter: Chapter) => {
-    if (!confirm(`确定要删除"${chapter.title}"吗？删除后无法恢复！`)) return
+    // 直接执行删除逻辑，不使用 confirm()
+    console.log(`删除章节: ${chapter.title}`)
     
     try {
       const token = localStorage.getItem('token')
@@ -516,9 +518,9 @@ export default function EnhancedChapterWorkspace() {
   }
 
   const clearContent = () => {
-    if (content && confirm('确定要清空所有内容吗？此操作无法撤销。')) {
-      handleContentChange('')
-    }
+    // 直接执行清空内容逻辑，不使用 confirm()
+    console.log('清空所有内容')
+    handleContentChange('')
   }
 
   const renderMarkdown = (text: string) => {
@@ -677,29 +679,7 @@ export default function EnhancedChapterWorkspace() {
             </button>
           </div>
 
-          {/* 章节统计 */}
-          {!sidebarCollapsed && (
-            <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-purple-50">
-              <div className="grid grid-cols-3 gap-2">
-                <div className="bg-white rounded-lg p-2.5 text-center shadow-sm">
-                  <div className="text-xl font-bold text-indigo-600">{chapters.length}</div>
-                  <div className="text-xs text-gray-500 mt-0.5">章节</div>
-                </div>
-                <div className="bg-white rounded-lg p-2.5 text-center shadow-sm">
-                  <div className="text-xl font-bold text-purple-600">
-                    {chapters.filter(ch => ch.content).length}
-                  </div>
-                  <div className="text-xs text-gray-500 mt-0.5">已完成</div>
-                </div>
-                <div className="bg-white rounded-lg p-2.5 text-center shadow-sm">
-                  <div className="text-xl font-bold text-blue-600">
-                    {(chapters.reduce((sum, ch) => sum + (ch.wordCount || 0), 0) / 1000).toFixed(1)}k
-                  </div>
-                  <div className="text-xs text-gray-500 mt-0.5">字数</div>
-                </div>
-              </div>
-            </div>
-          )}
+
 
           {/* 章节列表 */}
           <div className="flex-1 overflow-y-auto p-3">

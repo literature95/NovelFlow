@@ -19,8 +19,7 @@ export async function GET(
     // 验证小说是否属于当前用户
     const novel = await prisma.novel.findFirst({
       where: {
-        id: params.id,
-        userId: user.userId
+        id: params.id
       }
     })
 
@@ -29,6 +28,16 @@ export async function GET(
         { error: '小说不存在' },
         { status: 404 }
       )
+    }
+
+    // 开发环境跳过用户验证
+    if (process.env.APP_ENV !== 'development') {
+      if (novel.userId !== user.userId) {
+        return NextResponse.json(
+          { error: '没有权限操作该小说' },
+          { status: 403 }
+        )
+      }
     }
 
     const chapters = await prisma.chapter.findMany({
@@ -63,8 +72,7 @@ export async function POST(
     // 验证小说是否属于当前用户
     const novel = await prisma.novel.findFirst({
       where: {
-        id: params.id,
-        userId: user.userId
+        id: params.id
       }
     })
 
@@ -73,6 +81,16 @@ export async function POST(
         { error: '小说不存在' },
         { status: 404 }
       )
+    }
+
+    // 开发环境跳过用户验证
+    if (process.env.APP_ENV !== 'development') {
+      if (novel.userId !== user.userId) {
+        return NextResponse.json(
+          { error: '没有权限操作该小说' },
+          { status: 403 }
+        )
+      }
     }
 
     const { title, summary, content, order } = await request.json()

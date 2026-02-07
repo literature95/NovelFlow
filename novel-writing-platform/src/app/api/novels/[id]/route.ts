@@ -24,6 +24,9 @@ export async function GET(
       include: {
         chapters: {
           orderBy: { order: 'asc' }
+        },
+        characters: {
+          orderBy: { createdAt: 'asc' }
         }
       }
     })

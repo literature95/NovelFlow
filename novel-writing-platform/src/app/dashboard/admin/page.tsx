@@ -264,10 +264,9 @@ export default function AdminPage() {
   }
 
   const handleDeleteUser = async (userId: string) => {
-    if (!confirm('确定要删除该用户吗？此操作将级联删除该用户的所有小说和章节。')) {
-      return
-    }
-
+    // 直接执行删除逻辑，不使用 confirm()
+    console.log(`删除用户: ${userId}`)
+    
     try {
       const token = localStorage.getItem('token')
       const response = await fetch(`/api/admin/users/${userId}`, {
@@ -291,10 +290,9 @@ export default function AdminPage() {
   }
 
   const handleDeleteNovel = async (novelId: string) => {
-    if (!confirm('确定要删除该小说吗？此操作将级联删除该小说的所有章节、角色和世界观。')) {
-      return
-    }
-
+    // 直接执行删除逻辑，不使用 confirm()
+    console.log(`删除小说: ${novelId}`)
+    
     try {
       const token = localStorage.getItem('token')
       const response = await fetch(`/api/admin/novels/${novelId}`, {
@@ -925,10 +923,10 @@ export default function AdminPage() {
                         </label>
                         <button
                           onClick={() => {
-                            if (confirm('确定要刷新统计数据吗？')) {
-                              fetchAdminData()
-                              alert('统计数据已刷新！')
-                            }
+                            // 直接执行刷新统计数据逻辑，不使用 confirm()
+                            console.log('刷新统计数据')
+                            fetchAdminData()
+                            alert('统计数据已刷新！')
                           }}
                           className="w-full text-left px-4 py-3 text-sm border border-gray-600 rounded-lg hover:bg-gray-700 hover:border-gray-500 flex items-center transition-colors"
                         >

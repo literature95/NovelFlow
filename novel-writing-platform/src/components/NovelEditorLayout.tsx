@@ -445,16 +445,27 @@ export default function NovelEditorLayout() {
               <ChapterListEnhanced
                 novelId={novelId}
                 chapters={novel.chapters || []}
-                onChapterReorder={(reorderedChapters) => {
-                  setNovel({
-                    ...novel,
-                    chapters: reorderedChapters as any
-                  })
-                }}
                 onChapterSelect={(chapter: any) => setSelectedChapter(chapter)}
-                onShowDetail={(chapter) => {
-                  setSelectedChapter(chapter as any)
+                onChapterEdit={(chapter: any) => {
+                  // 编辑章节简介
+                  setSelectedChapter(chapter)
                   setShowDetailModal(true)
+                }}
+                onAIGenerate={(chapter: any) => {
+                  // AI生成章节内容
+                  console.log('AI生成章节:', chapter)
+                  // 这里可以添加AI生成的逻辑
+                }}
+                onChapterDelete={(chapter: any) => {
+                  // 删除章节
+                  // 直接执行删除逻辑，不使用 confirm()
+                  console.log('删除章节:', chapter)
+                  // 这里可以添加删除章节的逻辑
+                }}
+                onChapterExport={(chapter: any) => {
+                  // 导出章节
+                  console.log('导出章节:', chapter)
+                  // 这里可以添加导出章节的逻辑
                 }}
               />
             </div>

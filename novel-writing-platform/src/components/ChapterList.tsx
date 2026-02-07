@@ -11,7 +11,8 @@ import {
   GripVertical,
   Edit3,
   Eye,
-  Copy
+  Copy,
+  Download
 } from 'lucide-react'
 import { useDragAndDrop } from '@/hooks/useDragAndDrop'
 
@@ -35,6 +36,7 @@ interface ChapterListProps {
   onAIGenerate: (chapter: Chapter) => void
   onDelete: (chapter: Chapter) => void
   onView: (chapter: Chapter) => void
+  onChapterExport: (chapter: Chapter) => void
   onReorder?: (chapters: Chapter[]) => void
   generatingChapter?: string | null
   novelId: string
@@ -47,6 +49,7 @@ export default function ChapterList({
   onAIGenerate,
   onDelete,
   onView,
+  onChapterExport,
   onReorder,
   generatingChapter,
   novelId
@@ -109,35 +112,7 @@ export default function ChapterList({
 
   return (
     <div className="space-y-4">
-      {/* 章节统计卡片 */}
-      <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl p-6 text-white">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-lg font-semibold mb-2">章节统计</h3>
-            <div className="grid grid-cols-3 gap-6">
-              <div>
-                <div className="text-2xl font-bold">{chapters.length}</div>
-                <div className="text-blue-100 text-sm">总章节数</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold">
-                  {chapters.reduce((sum, chapter) => sum + calculateWordCount(chapter.content), 0)}
-                </div>
-                <div className="text-blue-100 text-sm">总字数</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold">
-                  {chapters.filter(chapter => chapter.content).length}
-                </div>
-                <div className="text-blue-100 text-sm">已完成</div>
-              </div>
-            </div>
-          </div>
-          <div className="text-6xl opacity-20">
-            <FileText />
-          </div>
-        </div>
-      </div>
+
 
       {/* 章节列表 */}
       <div className="space-y-3">
@@ -224,13 +199,7 @@ export default function ChapterList({
                   <div className={`flex items-center gap-2 transition-opacity duration-200 ${
                     showActions === chapter.id ? 'opacity-100' : 'opacity-0'
                   } group-hover:opacity-100`}>
-                    <button
-                      onClick={() => onView(chapter)}
-                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                      title="查看章节"
-                    >
-                      <Eye className="h-4 w-4" />
-                    </button>
+
                     <button
                       onClick={() => onEditSummary(chapter)}
                       className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
@@ -262,11 +231,16 @@ export default function ChapterList({
                       )}
                     </button>
                     <button
-                      onClick={() => copyChapterContent(chapter)}
-                      className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
-                      title="复制内容"
+                      onClick={() => onChapterExport(chapter)}
+                      disabled={!chapter.content || chapter.content.trim() === ''}
+                      className={`p-2 rounded-lg transition-colors ${
+                        !chapter.content || chapter.content.trim() === ''
+                          ? 'text-gray-300 cursor-not-allowed' 
+                          : 'text-gray-600 hover:bg-gray-50'
+                      }`}
+                      title="章节导出"
                     >
-                      <Copy className="h-4 w-4" />
+                      <Download className="h-4 w-4" />
                     </button>
                     <button
                       onClick={() => onDelete(chapter)}
