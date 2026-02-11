@@ -449,7 +449,7 @@ export default function NovelEditorLayout() {
                 onChapterEdit={(chapter: any) => {
                   // 编辑章节简介
                   setSelectedChapter(chapter)
-                  setShowDetailModal(true)
+                  setShowChapterModal(true)
                 }}
                 onAIGenerate={(chapter: any) => {
                   // AI生成章节内容
@@ -458,9 +458,10 @@ export default function NovelEditorLayout() {
                 }}
                 onChapterDelete={(chapter: any) => {
                   // 删除章节
-                  // 直接执行删除逻辑，不使用 confirm()
-                  console.log('删除章节:', chapter)
-                  // 这里可以添加删除章节的逻辑
+                  if (confirm(`确定要删除章节 "${chapter.title}" 吗？`)) {
+                    // 这里可以添加删除章节的逻辑
+                    console.log('删除章节:', chapter)
+                  }
                 }}
                 onChapterExport={(chapter: any) => {
                   // 导出章节

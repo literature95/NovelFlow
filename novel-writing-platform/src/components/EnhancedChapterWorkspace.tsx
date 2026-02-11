@@ -265,8 +265,9 @@ export default function EnhancedChapterWorkspace() {
       return
     }
 
-    // 直接执行AI生成逻辑，不使用 confirm()
-    console.log('AI生成章节内容，覆盖现有内容')
+    if (content && content.trim() && !confirm('当前章节已有内容，AI生成将覆盖。是否继续？')) {
+      return
+    }
 
     setGenerating(true)
     try {
@@ -359,8 +360,7 @@ export default function EnhancedChapterWorkspace() {
   }
 
   const handleDeleteChapter = async (chapter: Chapter) => {
-    // 直接执行删除逻辑，不使用 confirm()
-    console.log(`删除章节: ${chapter.title}`)
+    if (!confirm(`确定要删除"${chapter.title}"吗？删除后无法恢复！`)) return
     
     try {
       const token = localStorage.getItem('token')
@@ -518,9 +518,9 @@ export default function EnhancedChapterWorkspace() {
   }
 
   const clearContent = () => {
-    // 直接执行清空内容逻辑，不使用 confirm()
-    console.log('清空所有内容')
-    handleContentChange('')
+    if (content && confirm('确定要清空所有内容吗？此操作无法撤销。')) {
+      handleContentChange('')
+    }
   }
 
   const renderMarkdown = (text: string) => {

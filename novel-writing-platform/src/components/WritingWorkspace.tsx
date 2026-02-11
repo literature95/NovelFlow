@@ -12,8 +12,7 @@ import {
   Save,
   Menu,
   ChevronRight,
-  Plus,
-  X
+  Plus
 } from 'lucide-react'
 import { useAutoSave } from '@/hooks/useAutoSave'
 import AutoSaveIndicator from '@/components/AutoSaveIndicator'
@@ -70,20 +69,12 @@ export default function WritingWorkspace({
   onChapterSelect,
   onChapterEdit,
   onChapterDelete,
-  onChapterReorder,
-  generatingChapter
+  _onChapterReorder,
+  _generatingChapter
 }: WritingWorkspaceProps) {
-  const [activeTab, setActiveTab] = useState<string>('outline')
+  const [activeTab, setActiveTab] = useState<'chapters' | 'outline' | 'worldview' | 'characters'>('chapters')
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [localNovel, setLocalNovel] = useState<Novel>(novel)
-  
-  // 动态导航项列表
-  const [navItems, setNavItems] = useState([
-    { id: 'outline', name: '大纲', icon: 'file-text' },
-    { id: 'characters', name: '角色', icon: 'users' },
-    { id: 'worldview', name: '世界观', icon: 'globe' },
-    { id: 'summary', name: '小说简介', icon: 'info' }
-  ])
   
   // 右键菜单状态
   const [showContextMenu, setShowContextMenu] = useState(false)
@@ -92,6 +83,7 @@ export default function WritingWorkspace({
     id: string;
     name: string;
     icon: string;
+    active: boolean;
   } | null>(null)
 
   // 使用自动保存Hook
@@ -128,6 +120,7 @@ export default function WritingWorkspace({
     id: string;
     name: string;
     icon: string;
+    active: boolean;
   }) => {
     e.preventDefault()
     setShowContextMenu(true)
@@ -145,46 +138,23 @@ export default function WritingWorkspace({
   const handleRename = () => {
     if (!selectedItem) return
     
-    // 根据不同的导航项类型执行重命名逻辑
-    switch (selectedItem.id) {
-      case 'outline':
-        console.log(`重命名大纲`)
-        // 大纲重命名逻辑
-        break
-      case 'characters':
-        console.log(`重命名角色管理`)
-        // 角色管理重命名逻辑
-        break
-      case 'worldview':
-        console.log(`重命名世界观`)
-        // 世界观重命名逻辑
-        break
-      case 'summary':
-        console.log(`重命名小说简介`)
-        // 小说简介重命名逻辑
-        break
-      default:
-        break
+    const newName = prompt('请输入新名称:', selectedItem.name)
+    if (newName && newName.trim()) {
+      // 这里可以添加实际的重命名逻辑
+      alert(`重命名 ${selectedItem.name} 为 ${newName}`)
+      closeContextMenu()
     }
-    
-    closeContextMenu()
   }
   
   // 删除功能
   const handleDelete = () => {
     if (!selectedItem) return
     
-    // 删除导航项本身
-    const updatedNavItems = navItems.filter(item => item.id !== selectedItem.id)
-    setNavItems(updatedNavItems)
-    
-    // 如果删除的是当前激活项，切换到第一个导航项
-    if (activeTab === selectedItem.id && updatedNavItems.length > 0) {
-      setActiveTab(updatedNavItems[0].id)
+    if (confirm(`确定要删除 ${selectedItem.name} 吗？`)) {
+      // 这里可以添加实际的删除逻辑
+      alert(`删除 ${selectedItem.name}`)
+      closeContextMenu()
     }
-    
-    console.log(`删除导航项: ${selectedItem.name}`)
-    closeContextMenu()
   }
   
   // 点击页面其他地方关闭右键菜单
@@ -210,7 +180,7 @@ export default function WritingWorkspace({
       case 'error':
         return { text: '保存失败', color: 'text-red-600', icon: X }
       default:
-        return { text: '就绪', color: 'text-gray-600', icon: Save }
+        return { text: '就绪', color: 'text-gray-600', icon: Check }
     }
   }
 
@@ -306,35 +276,11 @@ export default function WritingWorkspace({
                 <div className="mt-6">
                   <ChapterListEnhanced
                     novelId={novel.id}
-                    chapters={(novel.chapters || []).map(chapter => ({
-                      id: chapter.id,
-                      title: chapter.title,
-                      summary: chapter.summary,
-                      content: chapter.content,
-                      order: chapter.order,
-                      status: chapter.status || 'draft',
-                      isAIGenerated: chapter.isAIGenerated || false
-                    }))}
-                    onChapterSelect={(chapter) => onChapterSelect({
-                      ...chapter,
-                      createdAt: '',
-                      updatedAt: ''
-                    })}
-                    onChapterEdit={(chapter) => onChapterEdit({
-                      ...chapter,
-                      createdAt: '',
-                      updatedAt: ''
-                    })}
-                    onAIGenerate={(chapter) => onChapterEdit({
-                      ...chapter,
-                      createdAt: '',
-                      updatedAt: ''
-                    })}
-                    onChapterDelete={(chapter) => onChapterDelete({
-                      ...chapter,
-                      createdAt: '',
-                      updatedAt: ''
-                    })}
+                    chapters={novel.chapters || []}
+                    onChapterSelect={onChapterSelect}
+                    onChapterEdit={onChapterEdit}
+                    onAIGenerate={(chapter) => onChapterEdit(chapter)}
+                    onChapterDelete={onChapterDelete}
                     onChapterExport={(chapter) => {
                       // 章节导出功能实现
                       const exportContent = `${chapter.title}\n\n${chapter.summary || ''}\n\n${chapter.content || ''}`;
@@ -427,19 +373,24 @@ export default function WritingWorkspace({
                     
                     <div className="flex-1 overflow-auto p-2">
                       <div className="space-y-1">
-                        {/* 动态导航项 */}
-                        {navItems.map((item) => (
+                        {/* 简化的导航项 */}
+                        {[
+                          { id: 'outline', name: '大纲', icon: 'file-text', active: true },
+                          { id: 'characters', name: '角色', icon: 'users', active: false },
+                          { id: 'worldview', name: '世界观', icon: 'globe', active: false },
+                          { id: 'summary', name: '小说简介', icon: 'info', active: false }
+                        ].map((item) => (
                           <div 
                             key={item.id}
                             className={`px-3 py-2 text-sm rounded cursor-pointer transition-colors flex items-center space-x-2 ${
-                              activeTab === item.id 
+                              item.active 
                                 ? 'bg-blue-100 text-blue-700' 
                                 : 'hover:bg-gray-200 text-gray-700'
                             }`}
                             onClick={() => {
                               // 点击导航项切换内容
                               console.log(`切换到 ${item.name}`)
-                              setActiveTab(item.id)
+                              // 这里可以添加实际的切换逻辑
                             }}
                             onContextMenu={(e) => handleContextMenu(e, item)}
                           >
@@ -459,23 +410,6 @@ export default function WritingWorkspace({
                           </div>
                         ))}
                       </div>
-                    </div>
-                    
-                    {/* 添加导航项按钮 */}
-                    <div className="p-2 border-t border-gray-200">
-                      <button
-                        className="w-full flex items-center space-x-2 px-3 py-2 text-sm text-green-600 hover:bg-green-50 rounded transition-colors"
-                        onClick={() => {
-                          // 添加新导航项
-                          const newId = `custom-${Date.now()}`
-                          const newItem = { id: newId, name: `新项${navItems.length + 1}`, icon: 'info' }
-                          setNavItems(prev => [...prev, newItem])
-                              setActiveTab(newId)
-                        }}
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                        <span>增加项</span>
-                      </button>
                     </div>
                     
                     {/* 右键菜单 */}
@@ -557,44 +491,6 @@ export default function WritingWorkspace({
               </div>
             )}
 
-            {activeTab === 'summary' && (
-              <div className="p-6 h-full">
-                <div className="mb-6">
-                  <h1 className="text-2xl font-bold text-gray-900 mb-2">小说简介</h1>
-                  <p className="text-gray-600">编辑小说的基本信息和简介</p>
-                </div>
-                
-                <div className="bg-white rounded-xl border border-gray-200 overflow-hidden h-[calc(100vh-180px)] flex">
-                  <div className="flex-1 overflow-auto bg-white">
-                    <textarea
-                      value={localNovel.description || ''}
-                      onChange={(e) => {
-                        setLocalNovel(prev => ({
-                          ...prev,
-                          description: e.target.value
-                        }))
-                      }}
-                      placeholder="在这里编写你的小说简介..."
-                      className="w-full h-full p-8 border-0 focus:ring-0 font-serif text-base resize-none"
-                      style={{ lineHeight: '1.8' }}
-                    />
-                  </div>
-                  
-                  <div className="p-2 border-t border-gray-200 text-xs text-gray-500 flex justify-between bg-gray-50">
-                    <div>
-                      {localNovel.description ? `${localNovel.description.length} 字符` : '0 字符'}
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      {hasUnsavedChanges && <span className="text-orange-600">未保存</span>}
-                      {savingStatus === 'saving' && <span className="text-blue-600">保存中...</span>}
-                      {savingStatus === 'saved' && <span className="text-green-600">已保存</span>}
-                      {savingStatus === 'error' && <span className="text-red-600">保存失败</span>}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-            
             {activeTab === 'characters' && (
               <div className="p-6">
                 <div className="mb-6">
@@ -672,19 +568,16 @@ export default function WritingWorkspace({
                             <div className="mt-3">
                               <div className="text-xs font-medium text-gray-700 mb-1">特征</div>
                               <div className="flex flex-wrap gap-2">
-                                {Array.from(Object.entries(JSON.parse(character.traits))).map(([key, value]) => {
-                                  if (value && typeof value !== 'object') {
-                                    return (
-                                      <span 
-                                        key={key} 
-                                        className="px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full"
-                                      >
-                                        {key}: {String(value)}
-                                      </span>
-                                    );
-                                  }
-                                  return null;
-                                }).filter(Boolean)}
+                                {Object.entries(JSON.parse(character.traits)).map(([key, value]: [string, string | number | boolean]) => (
+                                  value && (
+                                    <span 
+                                      key={key} 
+                                      className="px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full"
+                                    >
+                                      {key}: {value}
+                                    </span>
+                                  )
+                                ))}
                               </div>
                             </div>
                           )}
@@ -707,48 +600,6 @@ export default function WritingWorkspace({
                       </button>
                     </div>
                   )}
-                </div>
-              </div>
-            )}
-            
-            {/* 动态导航项内容 - 只显示自定义添加的导航项 */}
-            {!['chapters', 'outline', 'worldview', 'characters', 'summary'].includes(activeTab) && navItems.some(item => item.id === activeTab) && (
-              <div className="p-6 h-full">
-                <div className="mb-6">
-                  <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                    {navItems.find(item => item.id === activeTab)?.name || '动态内容'}
-                  </h1>
-                  <p className="text-gray-600">编辑你的动态内容...</p>
-                </div>
-                
-                <div className="bg-white rounded-xl border border-gray-200 overflow-hidden h-[calc(100vh-180px)] flex">
-                  <div className="flex-1 overflow-auto bg-white">
-                    <textarea
-                      value={localNovel.outline || ''}
-                      onChange={(e) => {
-                        setLocalNovel(prev => ({
-                          ...prev,
-                          outline: e.target.value
-                        }))
-                      }}
-                      placeholder={`在这里编写你的${navItems.find(item => item.id === activeTab)?.name || '内容'}...`}
-                      className="w-full h-full p-8 border-0 focus:ring-0 font-serif text-base resize-none"
-                      style={{ lineHeight: '1.8' }}
-                    />
-                  </div>
-                  
-                  {/* 底部状态栏 */}
-                  <div className="p-2 border-t border-gray-200 text-xs text-gray-500 flex justify-between bg-gray-50">
-                    <div>
-                      {localNovel.outline ? `${localNovel.outline.length} 字符` : '0 字符'}
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      {hasUnsavedChanges && <span className="text-orange-600">未保存</span>}
-                      {savingStatus === 'saving' && <span className="text-blue-600">保存中...</span>}
-                      {savingStatus === 'saved' && <span className="text-green-600">已保存</span>}
-                      {savingStatus === 'error' && <span className="text-red-600">保存失败</span>}
-                    </div>
-                  </div>
                 </div>
               </div>
             )}
