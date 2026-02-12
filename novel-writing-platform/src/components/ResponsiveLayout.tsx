@@ -128,7 +128,7 @@ export default function ResponsiveLayout({
                 <span className="text-gray-900 font-medium">{item.label}</span>
               )}
               {index < breadcrumbItems.length - 1 && (
-                <ChevronRight className="h-4 w-4 mx-1 flex-shrink-0" />
+                <ChevronRight className="h-4 w-4 mx-1 shrink-0" />
               )}
             </div>
           ))}

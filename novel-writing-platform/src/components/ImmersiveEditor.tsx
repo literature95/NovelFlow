@@ -462,7 +462,7 @@ export default function ImmersiveEditor({
           <div className="mt-3">
             <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-gradient-to-r from-blue-500 to-green-500 transition-all duration-300"
+                className="h-full bg-linear-to-r from-blue-500 to-green-500 transition-all duration-300"
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -561,7 +561,7 @@ export default function ImmersiveEditor({
             </div>
 
             {/* 鼓励语 */}
-            <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
+            <div className="mt-6 p-4 bg-linear-to-r from-blue-50 to-purple-50 rounded-lg">
               <div className="flex items-center mb-2">
                 <Coffee className="h-5 w-5 text-orange-500 mr-2" />
                 <h4 className="font-medium">加油！</h4>

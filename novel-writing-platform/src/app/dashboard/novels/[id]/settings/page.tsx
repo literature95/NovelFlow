@@ -240,7 +240,7 @@ export default function NovelSettingsPage() {
         </div>
 
         {/* 快速导航 */}
-        <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-6 mb-6">
+        <div className="bg-linear-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-6 mb-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">快速导航</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Link

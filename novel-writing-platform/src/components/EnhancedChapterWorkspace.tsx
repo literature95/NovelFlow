@@ -606,7 +606,7 @@ export default function EnhancedChapterWorkspace() {
           <div className="h-6 w-px bg-gray-200"></div>
 
           {/* 字数统计 */}
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 rounded-lg border border-blue-100">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-linear-to-r from-blue-50 to-indigo-50 text-blue-700 rounded-lg border border-blue-100">
             <Type className="h-4 w-4" />
             <span className="text-sm font-semibold">{wordCount.toLocaleString()}</span>
             <span className="text-xs text-blue-500">字</span>
@@ -642,11 +642,7 @@ export default function EnhancedChapterWorkspace() {
           <button
             onClick={handleSave}
             disabled={!hasChanges || saving}
-            className={`px-5 py-2 rounded-lg font-medium transition-all shadow-sm ${
-              hasChanges && !saving
-                ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 text-white hover:from-indigo-700 hover:to-indigo-800 hover:shadow-md'
-                : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-            }`}
+            className={`px-5 py-2 rounded-lg font-medium transition-all shadow-sm ${hasChanges && !saving ? 'bg-linear-to-r from-indigo-600 to-indigo-700 text-white hover:from-indigo-700 hover:to-indigo-800 hover:shadow-md' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}
           >
             {saving ? '保存中...' : '保存'}
           </button>
@@ -656,7 +652,7 @@ export default function EnhancedChapterWorkspace() {
       {/* 主内容区 */}
       <div className="flex-1 flex overflow-hidden">
         {/* 左侧章节列表 */}
-        <div className={`${sidebarCollapsed ? 'w-16' : 'w-72'} bg-gradient-to-b from-white to-gray-50 border-r border-gray-200 flex flex-col transition-all duration-300`}>
+        <div className={`${sidebarCollapsed ? 'w-16' : 'w-72'} bg-linear-to-b from-white to-gray-50 border-r border-gray-200 flex flex-col transition-all duration-300`}>
           {/* 侧边栏头部 */}
           <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-white">
             {!sidebarCollapsed && (
@@ -701,10 +697,10 @@ export default function EnhancedChapterWorkspace() {
                       key={chapter.id}
                       onClick={() => handleSelectChapter(chapter)}
                       className={`group relative p-3 rounded-lg border transition-all cursor-pointer overflow-hidden ${
-                        isActive 
-                          ? 'border-indigo-500 bg-gradient-to-r from-indigo-50 to-white shadow-sm' 
-                          : 'border-gray-100 hover:border-indigo-200 hover:bg-gray-50'
-                      }`}
+                      isActive 
+                        ? 'border-indigo-500 bg-linear-to-r from-indigo-50 to-white shadow-sm' 
+                        : 'border-gray-100 hover:border-indigo-200 hover:bg-gray-50'
+                    }`}
                     >
                       {/* 激活状态左侧标记 */}
                       {isActive && (
@@ -718,7 +714,7 @@ export default function EnhancedChapterWorkspace() {
                         </div>
 
                         {/* 章节序号和图标 */}
-                        <div className="flex items-center justify-center w-8 h-8 mt-0.5 flex-shrink-0">
+                        <div className="flex items-center justify-center w-8 h-8 mt-0.5 shrink-0">
                           {hasContent ? (
                             <div className="w-7 h-7 bg-green-50 rounded-lg flex items-center justify-center">
                               <Check className="h-3.5 w-3.5 text-green-500" />
@@ -855,7 +851,7 @@ export default function EnhancedChapterWorkspace() {
             <div className="p-3 border-t border-gray-200 bg-white">
               <button
                 onClick={handleCreateChapter}
-                className="w-full px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-lg hover:from-indigo-700 hover:to-indigo-800 transition-all shadow-sm hover:shadow flex items-center justify-center gap-2 font-medium text-sm"
+                className="w-full px-4 py-2.5 bg-linear-to-r from-indigo-600 to-indigo-700 text-white rounded-lg hover:from-indigo-700 hover:to-indigo-800 transition-all shadow-sm hover:shadow flex items-center justify-center gap-2 font-medium text-sm"
               >
                 <Plus className="h-4 w-4" />
                 新建章节
@@ -865,7 +861,7 @@ export default function EnhancedChapterWorkspace() {
         </div>
 
         {/* 中间编辑区 */}
-        <div className="flex-1 flex flex-col bg-gradient-to-b from-white to-gray-50">
+        <div className="flex-1 flex flex-col bg-linear-to-b from-white to-gray-50">
           {/* 编辑器工具栏 */}
           {viewMode === 'edit' && (
             <div className="px-6 py-2.5 border-b border-gray-200 bg-white flex items-center gap-1.5 flex-wrap">
@@ -991,7 +987,7 @@ export default function EnhancedChapterWorkspace() {
                     setRightPanelTab('ai')
                     setRightPanelCollapsed(false)
                   }}
-                  className="px-4 py-1.5 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-lg hover:from-purple-600 hover:to-indigo-600 transition-all shadow-sm hover:shadow flex items-center gap-2 text-sm font-medium"
+                  className="px-4 py-1.5 bg-linear-to-r from-purple-500 to-indigo-500 text-white rounded-lg hover:from-purple-600 hover:to-indigo-600 transition-all shadow-sm hover:shadow flex items-center gap-2 text-sm font-medium"
                 >
                   <Sparkles className="h-4 w-4" />
                   AI辅助
@@ -1112,11 +1108,7 @@ export default function EnhancedChapterWorkspace() {
                     <button
                       onClick={handleAIGenerate}
                       disabled={generating || !currentChapter?.summary}
-                      className={`w-full px-4 py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ${
-                        generating || !currentChapter?.summary
-                          ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                          : 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700'
-                      }`}
+                      className={`w-full px-4 py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ${generating || !currentChapter?.summary ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-linear-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700'}`}
                     >
                       {generating ? (
                         <>
@@ -1259,7 +1251,7 @@ export default function EnhancedChapterWorkspace() {
               </button>
               <button
                 onClick={handleSaveChapterInfo}
-                className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-lg hover:from-indigo-700 hover:to-indigo-800 transition-colors font-medium"
+                className="px-6 py-2 bg-linear-to-r from-indigo-600 to-indigo-700 text-white rounded-lg hover:from-indigo-700 hover:to-indigo-800 transition-colors font-medium"
               >
                 保存
               </button>

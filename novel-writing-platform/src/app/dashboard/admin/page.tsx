@@ -445,13 +445,13 @@ export default function AdminPage() {
 
       {/* 后台管理侧边栏 */}
       <div className={`
-        fixed inset-y-0 left-0 z-50 w-72 bg-gray-800 transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 lg:flex-shrink-0 border-r border-gray-700
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-      `}>
+          fixed inset-y-0 left-0 z-50 w-72 bg-gray-800 transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 lg:shrink-0 border-r border-gray-700
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        `}>
         {/* Logo区域 */}
         <div className="flex items-center justify-between h-16 px-6 border-b border-gray-700 bg-gray-900">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-red-500 to-orange-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-linear-to-br from-red-500 to-orange-600 rounded-lg flex items-center justify-center">
               <Shield className="h-5 w-5 text-white" />
             </div>
             <div>
@@ -481,7 +481,7 @@ export default function AdminPage() {
                   className={`
                     group w-full flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-all duration-200
                     ${isActive
-                      ? 'bg-gradient-to-r from-red-600 to-orange-600 text-white shadow-lg'
+                      ? 'bg-linear-to-r from-red-600 to-orange-600 text-white shadow-lg'
                       : 'text-gray-300 hover:bg-gray-700 hover:text-white'
                     }
                   `}
@@ -501,7 +501,7 @@ export default function AdminPage() {
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-700 bg-gray-900">
           <div className="flex items-center mb-3">
             <div className="relative">
-              <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-orange-600 rounded-full flex items-center justify-center shadow-sm">
+              <div className="w-10 h-10 bg-linear-to-br from-red-500 to-orange-600 rounded-full flex items-center justify-center shadow-sm">
                 <Shield className="h-5 w-5 text-white" />
               </div>
               <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-gray-900"></div>
@@ -579,7 +579,7 @@ export default function AdminPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
                       <div className="flex items-center">
-                        <div className="flex-shrink-0 bg-blue-900/50 rounded-lg p-3">
+                        <div className="shrink-0 bg-blue-900/50 rounded-lg p-3">
                           <Users className="h-6 w-6 text-blue-400" />
                         </div>
                         <div className="ml-4">
@@ -591,7 +591,7 @@ export default function AdminPage() {
 
                     <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
                       <div className="flex items-center">
-                        <div className="flex-shrink-0 bg-green-900/50 rounded-lg p-3">
+                        <div className="shrink-0 bg-green-900/50 rounded-lg p-3">
                           <FileText className="h-6 w-6 text-green-400" />
                         </div>
                         <div className="ml-4">
@@ -603,7 +603,7 @@ export default function AdminPage() {
 
                     <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
                       <div className="flex items-center">
-                        <div className="flex-shrink-0 bg-purple-900/50 rounded-lg p-3">
+                        <div className="shrink-0 bg-purple-900/50 rounded-lg p-3">
                           <Database className="h-6 w-6 text-purple-400" />
                         </div>
                         <div className="ml-4">
@@ -615,7 +615,7 @@ export default function AdminPage() {
 
                     <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
                       <div className="flex items-center">
-                        <div className="flex-shrink-0 bg-orange-900/50 rounded-lg p-3">
+                        <div className="shrink-0 bg-orange-900/50 rounded-lg p-3">
                           <BarChart3 className="h-6 w-6 text-orange-400" />
                         </div>
                         <div className="ml-4">
@@ -983,7 +983,7 @@ export default function AdminPage() {
                             <div className="text-sm font-medium text-white">维护模式</div>
                             <div className="text-xs text-gray-400">开启后普通用户无法访问</div>
                           </div>
-                          <button className="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none bg-gray-600">
+                          <button className="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none bg-gray-600">
                             <span className="sr-only">Use setting</span>
                             <span className="translate-x-0 pointer-events-none relative inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
                           </button>
@@ -993,7 +993,7 @@ export default function AdminPage() {
                             <div className="text-sm font-medium text-white">用户注册</div>
                             <div className="text-xs text-gray-400">是否允许新用户注册</div>
                           </div>
-                          <button className="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none bg-green-600">
+                          <button className="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none bg-green-600">
                             <span className="sr-only">Use setting</span>
                             <span className="translate-x-5 pointer-events-none relative inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
                           </button>
@@ -1003,7 +1003,7 @@ export default function AdminPage() {
                             <div className="text-sm font-medium text-white">AI 生成功能</div>
                             <div className="text-xs text-gray-400">启用或禁用AI内容生成</div>
                           </div>
-                          <button className="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none bg-green-600">
+                          <button className="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none bg-green-600">
                             <span className="sr-only">Use setting</span>
                             <span className="translate-x-5 pointer-events-none relative inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
                           </button>

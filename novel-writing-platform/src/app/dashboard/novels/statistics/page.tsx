@@ -112,7 +112,7 @@ export default function NovelsStatisticsPage() {
 
       {/* 总览统计 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl p-6">
+        <div className="bg-linear-to-br from-blue-500 to-blue-600 text-white rounded-xl p-6">
           <div className="flex items-center">
             <BookOpen className="h-8 w-8 opacity-80" />
             <div className="ml-4">
@@ -122,7 +122,7 @@ export default function NovelsStatisticsPage() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-xl p-6">
+        <div className="bg-linear-to-br from-green-500 to-green-600 text-white rounded-xl p-6">
           <div className="flex items-center">
             <FileText className="h-8 w-8 opacity-80" />
             <div className="ml-4">
@@ -132,7 +132,7 @@ export default function NovelsStatisticsPage() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-xl p-6">
+        <div className="bg-linear-to-br from-purple-500 to-purple-600 text-white rounded-xl p-6">
           <div className="flex items-center">
             <TrendingUp className="h-8 w-8 opacity-80" />
             <div className="ml-4">
@@ -142,7 +142,7 @@ export default function NovelsStatisticsPage() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-xl p-6">
+        <div className="bg-linear-to-br from-orange-500 to-orange-600 text-white rounded-xl p-6">
           <div className="flex items-center">
             <Clock className="h-8 w-8 opacity-80" />
             <div className="ml-4">
@@ -274,7 +274,7 @@ export default function NovelsStatisticsPage() {
           <div className="space-y-3">
             {stats.recentActivity.map((activity, index) => (
               <div key={index} className="flex items-start space-x-3">
-                <div className="flex-shrink-0 w-2 h-2 bg-indigo-400 rounded-full mt-2"></div>
+                <div className="shrink-0 w-2 h-2 bg-indigo-400 rounded-full mt-2"></div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm text-gray-900">
                     <span className="font-medium">{activity.action}</span>

@@ -427,7 +427,7 @@ export default function WritingToolbar({
             <Target className="h-4 w-4 text-gray-600" />
             <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-gradient-to-r from-blue-500 to-green-500 transition-all duration-300"
+                className="h-full bg-linear-to-r from-blue-500 to-green-500 transition-all duration-300"
                 style={{ width: `${writingProgress}%` }}
               />
             </div>
