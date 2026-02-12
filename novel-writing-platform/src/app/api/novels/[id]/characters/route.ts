@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
-import { verifyToken } from '@/lib/auth'
+import { getCurrentUser } from '@/lib/auth'
 
 const prisma = new PrismaClient()
 
@@ -10,14 +10,9 @@ export async function GET(
 ) {
   try {
     const resolvedParams = await params
-    const token = request.headers.get('Authorization')?.replace('Bearer ', '')
-    if (!token) {
-      return NextResponse.json({ error: '未提供认证令牌' }, { status: 401 })
-    }
-
-    const decoded = verifyToken(token)
-    if (!decoded) {
-      return NextResponse.json({ error: '无效的认证令牌' }, { status: 401 })
+    const user = await getCurrentUser(request)
+    if (!user) {
+      return NextResponse.json({ error: '未授权' }, { status: 401 })
     }
 
     const novel = await prisma.novel.findUnique({
@@ -33,7 +28,7 @@ export async function GET(
       return NextResponse.json({ error: '小说不存在' }, { status: 404 })
     }
 
-    if (novel.userId !== decoded.userId) {
+    if (novel.userId !== user.userId) {
       return NextResponse.json({ error: '无权访问此小说' }, { status: 403 })
     }
 
@@ -50,14 +45,9 @@ export async function POST(
 ) {
   try {
     const resolvedParams = await params
-    const token = request.headers.get('Authorization')?.replace('Bearer ', '')
-    if (!token) {
-      return NextResponse.json({ error: '未提供认证令牌' }, { status: 401 })
-    }
-
-    const decoded = verifyToken(token)
-    if (!decoded) {
-      return NextResponse.json({ error: '无效的认证令牌' }, { status: 401 })
+    const user = await getCurrentUser(request)
+    if (!user) {
+      return NextResponse.json({ error: '未授权' }, { status: 401 })
     }
 
     const novel = await prisma.novel.findUnique({
@@ -68,7 +58,7 @@ export async function POST(
       return NextResponse.json({ error: '小说不存在' }, { status: 404 })
     }
 
-    if (novel.userId !== decoded.userId) {
+    if (novel.userId !== user.userId) {
       return NextResponse.json({ error: '无权访问此小说' }, { status: 403 })
     }
 

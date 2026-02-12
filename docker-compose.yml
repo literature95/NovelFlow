@@ -1,6 +1,20 @@
 version: '3.8'
 
 services:
+  # 默认使用SQLite，如需使用PostgreSQL，请取消注释以下配置
+  # db:
+  #   image: postgres:14
+  #   container_name: novelflow-db
+  #   environment:
+  #     - POSTGRES_USER=novelflow
+  #     - POSTGRES_PASSWORD=your-secure-password
+  #     - POSTGRES_DB=novelflow
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   restart: unless-stopped
+  #   networks:
+  #     - novelflow-network
+
   novelflow-app:
     build:
       context: ./novel-writing-platform
@@ -10,14 +24,25 @@ services:
       - "5000:5000"
     environment:
       - NODE_ENV=production
+      - DATABASE_PROVIDER=sqlite
       - DATABASE_URL=file:./dev.db
       - NEXTAUTH_URL=http://localhost:5000
       - DOCKER_ENV=true
+    # 使用PostgreSQL时，请取消注释以下配置并注释上面的SQLite配置
+    # environment:
+    #   - NODE_ENV=production
+    #   - DATABASE_PROVIDER=postgresql
+    #   - DATABASE_URL=postgresql://novelflow:your-secure-password@db:5432/novelflow
+    #   - NEXTAUTH_URL=http://localhost:5000
+    #   - DOCKER_ENV=true
     volumes:
-      # 持久化数据库文件
+      # 持久化数据库文件（SQLite）
       - novelflow_db_data:/app/dev.db
       # 持久化日志文件
       - novelflow_logs:/app/logs
+    # 使用PostgreSQL时，请取消注释以下依赖配置
+    # depends_on:
+    #   - db
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:5000/api/test-api"]
@@ -33,6 +58,7 @@ volumes:
     driver: local
   novelflow_logs:
     driver: local
+  # postgres_data:  # 使用PostgreSQL时，请取消注释
 
 networks:
   novelflow-network:

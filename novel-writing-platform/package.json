@@ -15,17 +15,20 @@
     "@prisma/client": "^5.22.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.10",
+    "@uiw/react-md-editor": "^4.0.11",
     "axios": "^1.13.2",
     "bcryptjs": "^3.0.3",
     "dotenv": "^17.2.3",
     "jsonwebtoken": "^9.0.3",
     "langchain": "^1.2.2",
     "lucide-react": "^0.562.0",
-    "next": "^16.1.0",
+    "next": "^14.2.10",
     "next-auth": "^4.24.13",
     "prisma": "^5.22.0",
-    "react": "19.2.1",
-    "react-dom": "19.2.1"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-markdown": "^10.1.0",
+    "reactflow": "^11.11.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

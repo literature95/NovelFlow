@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Save, ArrowLeft, User, Tag, Heart, MapPin } from 'lucide-react'
+import MDEditor from '@uiw/react-md-editor'
 
 interface CharacterData {
   name: string
@@ -217,17 +218,18 @@ export default function CreateCharacterPage({ params }: { params: { id: string }
             </div>
             
             <div className="mt-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                角色描述
-              </label>
-              <textarea
-                value={characterData.description}
-                onChange={(e) => setCharacterData(prev => ({ ...prev, description: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                rows={4}
-                placeholder="请描述角色的基本信息、背景故事等..."
-              />
-            </div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  角色描述
+                </label>
+                <div className="border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 overflow-hidden">
+                  <MDEditor
+                    value={characterData.description}
+                    onChange={(value) => setCharacterData(prev => ({ ...prev, description: value || '' }))}
+                    height={250}
+                    placeholder="请描述角色的基本信息、背景故事等..."
+                  />
+                </div>
+              </div>
           </div>
 
           {/* 角色特征 */}

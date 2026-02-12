@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Plus, Globe, Edit, Trash2, MapPin, Clock, BookOpen, Users, Zap, Coins, Crown, Sparkles } from 'lucide-react'
+import ReactMarkdown from 'react-markdown'
 
 interface WorldSetting {
   id: string
@@ -295,9 +296,9 @@ export default function WorldSettingsPage({ params }: { params: { id: string } }
                           </div>
                         </div>
                         
-                        <p className="text-gray-600 text-sm line-clamp-3 mb-3">
-                          {setting.content}
-                        </p>
+                        <div className="text-gray-600 text-sm line-clamp-3 mb-3">
+                          <ReactMarkdown>{setting.content}</ReactMarkdown>
+                        </div>
                         
                         <div className="text-xs text-gray-500">
                           创建于 {new Date(setting.createdAt).toLocaleDateString()}

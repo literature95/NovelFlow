@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Save, ArrowLeft, Globe, MapPin, Clock, BookOpen, Users, Zap, Coins, Crown, Sparkles } from 'lucide-react'
+import { Save, ArrowLeft, Globe, MapPin, Clock, BookOpen, Users, Zap, Coins, Crown, Sparkles, Trash2 } from 'lucide-react'
 import MDEditor from '@uiw/react-md-editor'
 
 const categories = [
@@ -19,21 +19,55 @@ const categories = [
   { value: '其他', label: '其他', icon: Sparkles, description: '其他未分类的世界观设定' }
 ]
 
-export default function CreateWorldSettingPage({ params }: { params: { id: string } }) {
+interface WorldSettingData {
+  title: string
+  content: string
+  category: string
+}
+
+export default function EditWorldSettingPage({ params }: { params: { id: string; settingId: string } }) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [fetchLoading, setFetchLoading] = useState(true)
   const [error, setError] = useState('')
   const [novelTitle, setNovelTitle] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('地理')
-  const [formData, setFormData] = useState({
+  const [worldSettingData, setWorldSettingData] = useState<WorldSettingData>({
     title: '',
     content: '',
     category: '地理'
   })
 
   useEffect(() => {
+    fetchWorldSetting()
     fetchNovelInfo()
   }, [])
+
+  const fetchWorldSetting = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      const response = await fetch(`/api/novels/${params.id}/world-settings/${params.settingId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        setWorldSettingData({
+          title: data.worldSetting.title,
+          content: data.worldSetting.content,
+          category: data.worldSetting.category
+        })
+      } else {
+        setError('获取世界观设定信息失败')
+      }
+    } catch (error) {
+      console.error('获取世界观设定信息失败:', error)
+      setError('获取世界观设定信息失败')
+    } finally {
+      setFetchLoading(false)
+    }
+  }
 
   const fetchNovelInfo = async () => {
     try {
@@ -56,7 +90,7 @@ export default function CreateWorldSettingPage({ params }: { params: { id: strin
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (!formData.title.trim() || !formData.content.trim()) {
+    if (!worldSettingData.title.trim() || !worldSettingData.content.trim()) {
       setError('标题和内容不能为空')
       return
     }
@@ -66,36 +100,71 @@ export default function CreateWorldSettingPage({ params }: { params: { id: strin
 
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch(`/api/novels/${params.id}/world-settings`, {
-        method: 'POST',
+      const response = await fetch(`/api/novels/${params.id}/world-settings/${params.settingId}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(worldSettingData)
       })
 
       if (response.ok) {
         router.push(`/dashboard/novels/${params.id}/world-settings`)
       } else {
         const data = await response.json()
-        setError(data.error || '创建世界观设定失败')
+        setError(data.error || '更新世界观设定失败')
       }
     } catch (error) {
-      console.error('创建世界观设定失败:', error)
-      setError('创建世界观设定失败')
+      console.error('更新世界观设定失败:', error)
+      setError('更新世界观设定失败')
     } finally {
       setLoading(false)
     }
   }
 
-  const handleCategorySelect = (category: string) => {
-    setSelectedCategory(category)
-    setFormData(prev => ({ ...prev, category }))
+  const deleteWorldSetting = async () => {
+    if (!confirm('确定要删除这个世界观设定吗？此操作不可恢复。')) {
+      return
+    }
+
+    try {
+      const token = localStorage.getItem('token')
+      const response = await fetch(`/api/novels/${params.id}/world-settings/${params.settingId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+      if (response.ok) {
+        router.push(`/dashboard/novels/${params.id}/world-settings`)
+      } else {
+        setError('删除世界观设定失败')
+      }
+    } catch (error) {
+      console.error('删除世界观设定失败:', error)
+      setError('删除世界观设定失败')
+    }
   }
 
-  const selectedCategoryInfo = categories.find(cat => cat.value === selectedCategory)
+  const handleCategorySelect = (category: string) => {
+    setWorldSettingData(prev => ({ ...prev, category }))
+  }
+
+  const selectedCategoryInfo = categories.find(cat => cat.value === worldSettingData.category)
   const Icon = selectedCategoryInfo?.icon || Sparkles
+
+  if (fetchLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">加载中...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -111,9 +180,16 @@ export default function CreateWorldSettingPage({ params }: { params: { id: strin
                 ← 返回世界观设定
               </Link>
               <h1 className="text-xl font-semibold text-gray-900">
-                创建世界观设定
+                编辑世界观设定
               </h1>
             </div>
+            <button
+              onClick={deleteWorldSetting}
+              className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              删除设定
+            </button>
           </div>
         </div>
       </div>
@@ -138,7 +214,7 @@ export default function CreateWorldSettingPage({ params }: { params: { id: strin
               <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
                 <Icon className="h-6 w-6 text-blue-600" />
                 <div>
-                  <h3 className="font-medium text-blue-900">{selectedCategory}</h3>
+                  <h3 className="font-medium text-blue-900">{worldSettingData.category}</h3>
                   <p className="text-sm text-blue-700">{selectedCategoryInfo?.description}</p>
                 </div>
               </div>
@@ -152,18 +228,10 @@ export default function CreateWorldSettingPage({ params }: { params: { id: strin
                     key={category.value}
                     type="button"
                     onClick={() => handleCategorySelect(category.value)}
-                    className={`p-3 rounded-lg border-2 transition-all ${
-                      selectedCategory === category.value
-                        ? 'border-blue-500 bg-blue-50'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
+                    className={`p-3 rounded-lg border-2 transition-all ${worldSettingData.category === category.value ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'}`}
                   >
-                    <CategoryIcon className={`h-5 w-5 mx-auto mb-1 ${
-                      selectedCategory === category.value ? 'text-blue-600' : 'text-gray-500'
-                    }`} />
-                    <div className={`text-xs font-medium ${
-                      selectedCategory === category.value ? 'text-blue-900' : 'text-gray-700'
-                    }`}>
+                    <CategoryIcon className={`h-5 w-5 mx-auto mb-1 ${worldSettingData.category === category.value ? 'text-blue-600' : 'text-gray-500'}`} />
+                    <div className={`text-xs font-medium ${worldSettingData.category === category.value ? 'text-blue-900' : 'text-gray-700'}`}>
                       {category.label}
                     </div>
                   </button>
@@ -176,7 +244,7 @@ export default function CreateWorldSettingPage({ params }: { params: { id: strin
           <div className="bg-white rounded-lg shadow-sm p-6">
             <div className="flex items-center space-x-2 mb-6">
               <Icon className="h-5 w-5 text-blue-600" />
-              <h2 className="text-lg font-semibold text-gray-900">基本信息</h2>
+              <h2 className="text-lg font-semibold text-gray-900">设定内容</h2>
             </div>
             
             <div className="mb-6">
@@ -185,8 +253,8 @@ export default function CreateWorldSettingPage({ params }: { params: { id: strin
               </label>
               <input
                 type="text"
-                value={formData.title}
-                onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                value={worldSettingData.title}
+                onChange={(e) => setWorldSettingData(prev => ({ ...prev, title: e.target.value }))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="请输入世界观设定的标题"
                 required
@@ -199,14 +267,14 @@ export default function CreateWorldSettingPage({ params }: { params: { id: strin
               </label>
               <div className="border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 overflow-hidden">
                 <MDEditor
-                  value={formData.content}
-                  onChange={(value) => setFormData(prev => ({ ...prev, content: value || '' }))}
+                  value={worldSettingData.content}
+                  onChange={(value) => setWorldSettingData(prev => ({ ...prev, content: value || '' }))}
                   height={400}
                   placeholder="请详细描述这个世界观设定的具体内容..."
                 />
               </div>
               <div className="mt-2 text-sm text-gray-500">
-                {formData.content.length} 个字符
+                {worldSettingData.content.length} 个字符
               </div>
             </div>
           </div>
@@ -227,12 +295,12 @@ export default function CreateWorldSettingPage({ params }: { params: { id: strin
               {loading ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  创建中...
+                  保存中...
                 </>
               ) : (
                 <>
                   <Save className="h-4 w-4 mr-2" />
-                  创建设定
+                  保存更改
                 </>
               )}
             </button>

@@ -3,7 +3,9 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Plus, Users, Edit, Trash2, User } from 'lucide-react'
+import { Plus, Users, Edit, Trash2, User, Network } from 'lucide-react'
+import ReactMarkdown from 'react-markdown'
+import CharacterRelationshipGraph from '@/components/CharacterRelationshipGraph'
 
 interface Character {
   id: string
@@ -22,6 +24,7 @@ export default function CharactersPage({ params }: { params: { id: string } }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [novelTitle, setNovelTitle] = useState('')
+  const [viewMode, setViewMode] = useState<'list' | 'graph'>('list')
 
   useEffect(() => {
     fetchCharacters()
@@ -145,9 +148,9 @@ export default function CharactersPage({ params }: { params: { id: string } }) {
           </div>
         )}
 
-        {/* 角色统计 */}
+        {/* 角色统计和视图切换 */}
         <div className="mb-8 bg-white rounded-lg shadow-sm p-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center space-x-3">
               <Users className="h-8 w-8 text-blue-600" />
               <div>
@@ -155,89 +158,120 @@ export default function CharactersPage({ params }: { params: { id: string } }) {
                 <p className="text-gray-600">共 {characters.length} 个角色</p>
               </div>
             </div>
+            <div className="flex items-center space-x-3">
+              <span className="text-sm text-gray-500">视图模式：</span>
+              <div className="flex border border-gray-300 rounded-lg overflow-hidden">
+                <button
+                  onClick={() => setViewMode('list')}
+                  className={`px-4 py-2 text-sm font-medium transition-colors ${viewMode === 'list' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+                >
+                  列表视图
+                </button>
+                <button
+                  onClick={() => setViewMode('graph')}
+                  className={`px-4 py-2 text-sm font-medium transition-colors ${viewMode === 'graph' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+                >
+                  <Network className="inline h-4 w-4 mr-1" />
+                  关系图谱
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
+        {/* 关系图谱 */}
+        {viewMode === 'graph' && (
+          <div className="mb-8">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+              <Network className="h-5 w-5 text-blue-600 mr-2" />
+              角色关系图谱
+            </h3>
+            <CharacterRelationshipGraph characters={characters} novelId={params.id} />
+          </div>
+        )}
+
         {/* 角色列表 */}
-        {characters.length === 0 ? (
-          <div className="text-center py-12">
-            <Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">还没有角色</h3>
-            <p className="text-gray-600 mb-6">开始创建你的第一个角色吧</p>
-            <Link
-              href={`/dashboard/novels/${params.id}/characters/create`}
-              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              创建第一个角色
-            </Link>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {characters.map((character) => (
-              <div key={character.id} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center space-x-3">
-                    {character.avatarUrl ? (
-                      <img 
-                        src={character.avatarUrl} 
-                        alt={character.name}
-                        className="h-12 w-12 rounded-full object-cover"
-                      />
-                    ) : (
-                      <div className="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center">
-                        <User className="h-6 w-6 text-gray-500" />
+        {viewMode === 'list' && (
+          characters.length === 0 ? (
+            <div className="text-center py-12">
+              <Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">还没有角色</h3>
+              <p className="text-gray-600 mb-6">开始创建你的第一个角色吧</p>
+              <Link
+                href={`/dashboard/novels/${params.id}/characters/create`}
+                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                创建第一个角色
+              </Link>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {characters.map((character) => (
+                <div key={character.id} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center space-x-3">
+                      {character.avatarUrl ? (
+                        <img 
+                          src={character.avatarUrl} 
+                          alt={character.name}
+                          className="h-12 w-12 rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center">
+                          <User className="h-6 w-6 text-gray-500" />
+                        </div>
+                      )}
+                      <div>
+                        <h3 className="text-lg font-medium text-gray-900">{character.name}</h3>
+                        <p className="text-sm text-gray-500">角色</p>
                       </div>
-                    )}
-                    <div>
-                      <h3 className="text-lg font-medium text-gray-900">{character.name}</h3>
-                      <p className="text-sm text-gray-500">角色</p>
+                    </div>
+                    <div className="flex space-x-2">
+                      <Link
+                        href={`/dashboard/novels/${params.id}/characters/${character.id}/edit`}
+                        className="text-blue-600 hover:text-blue-800"
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Link>
+                      <button
+                        onClick={() => deleteCharacter(character.id)}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
                     </div>
                   </div>
-                  <div className="flex space-x-2">
-                    <Link
-                      href={`/dashboard/novels/${params.id}/characters/${character.id}/edit`}
-                      className="text-blue-600 hover:text-blue-800"
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Link>
-                    <button
-                      onClick={() => deleteCharacter(character.id)}
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  </div>
-                </div>
-                
-                {character.description && (
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                    {character.description}
-                  </p>
-                )}
-                
-                {character.traits && Object.keys(character.traits).length > 0 && (
-                  <div className="mb-4">
-                    <h4 className="text-sm font-medium text-gray-900 mb-2">特征</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {Object.entries(character.traits).map(([key, value]) => (
-                        <span 
-                          key={key}
-                          className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
-                        >
-                          {key}: {String(value)}
-                        </span>
-                      ))}
+                  
+                  {character.description && (
+                    <div className="text-gray-600 text-sm mb-4 line-clamp-3">
+                      <ReactMarkdown>{character.description}</ReactMarkdown>
                     </div>
+                  )}
+                  
+                  {character.traits && Object.keys(character.traits).length > 0 && (
+                    <div className="mb-4">
+                      <h4 className="text-sm font-medium text-gray-900 mb-2">特征</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {Object.entries(character.traits).map(([key, value]) => (
+                          <span 
+                            key={key}
+                            className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
+                          >
+                            {key}: {String(value)}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div className="text-xs text-gray-500">
+                    创建于 {new Date(character.createdAt).toLocaleDateString()}
                   </div>
-                )}
-                
-                <div className="text-xs text-gray-500">
-                  创建于 {new Date(character.createdAt).toLocaleDateString()}
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )
         )}
       </div>
     </div>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { 
   Maximize2, 
   Minimize2, 
@@ -49,6 +49,23 @@ interface WritingStats {
   currentStreak: number
 }
 
+// 防抖函数
+function debounce<T extends (...args: any[]) => any>(
+  func: T,
+  delay: number
+): (...args: Parameters<T>) => void {
+  let timeoutId: NodeJS.Timeout | null = null;
+  return (...args: Parameters<T>) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = setTimeout(() => {
+      func(...args);
+      timeoutId = null;
+    }, delay);
+  };
+}
+
 export default function ImmersiveEditor({
   initialContent,
   onSave,
@@ -80,13 +97,11 @@ export default function ImmersiveEditor({
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
   const sessionTimerRef = useRef<NodeJS.Timeout | null>(null)
-  const autoSaveRef = useRef<NodeJS.Timeout | null>(null)
-
+  const autoSaveRef = useRef<NodeJS.Timeout | null>(null) // 保留以兼容其他地方
   // 计算写作统计
   const calculateStats = useCallback((): WritingStats => {
     const words = content.trim().split(/\s+/).filter(word => word.length > 0).length
     const wpm = sessionTime > 0 ? Math.round((words / sessionTime) * 60) : 0
-    const progress = Math.min((words / writingGoalState) * 100, 100)
     
     return {
       wordsWritten: words,
@@ -95,11 +110,29 @@ export default function ImmersiveEditor({
       sessionsCompleted: 1,
       currentStreak: 1
     }
-  }, [content, sessionTime, writingGoal])
+  }, [content, sessionTime])
+
+  // 使用useMemo优化统计计算
+  const stats = useMemo(() => {
+    return calculateStats()
+  }, [calculateStats])
+
+  const progress = useMemo(() => {
+    return Math.min((stats.wordsWritten / writingGoalState) * 100, 100)
+  }, [stats.wordsWritten, writingGoalState])
+
+  // 使用防抖优化自动保存
+  const debouncedAutoSave = useCallback(
+    debounce(async (saveContent: string) => {
+      await onSave(saveContent)
+      setLastSaved(new Date())
+    }, 30000), // 30秒自动保存
+    [onSave]
+  )
 
   useEffect(() => {
-    setWordCount(calculateStats().wordsWritten)
-  }, [content, calculateStats])
+    setWordCount(stats.wordsWritten)
+  }, [stats.wordsWritten])
 
   useEffect(() => {
     // 专注模式计时器
@@ -143,17 +176,16 @@ export default function ImmersiveEditor({
   useEffect(() => {
     // 自动保存
     if (autoSaveEnabled && content !== initialContent) {
-      autoSaveRef.current = setTimeout(() => {
-        handleAutoSave()
-      }, 30000) // 30秒自动保存
+      debouncedAutoSave(content)
     }
+  }, [content, autoSaveEnabled, initialContent, debouncedAutoSave])
 
+  // 清理防抖函数
+  useEffect(() => {
     return () => {
-      if (autoSaveRef.current) {
-        clearTimeout(autoSaveRef.current)
-      }
+      // 防抖函数内部会清理，这里不需要额外清理
     }
-  }, [content, autoSaveEnabled, initialContent])
+  }, [debouncedAutoSave])
 
   useEffect(() => {
     // 全屏控制
@@ -164,17 +196,7 @@ export default function ImmersiveEditor({
     }
   }, [isFullscreen])
 
-  const handleAutoSave = async () => {
-    try {
-      setSaving(true)
-      await onSave(content)
-      setLastSaved(new Date())
-    } catch (error) {
-      console.error('自动保存失败:', error)
-    } finally {
-      setSaving(false)
-    }
-  }
+  // 自动保存已通过debouncedAutoSave函数实现
 
   const handleManualSave = async () => {
     try {
@@ -269,8 +291,7 @@ export default function ImmersiveEditor({
     onExit()
   }
 
-  const stats = calculateStats()
-  const progress = Math.min((stats.wordsWritten / writingGoalState) * 100, 100)
+  // stats和progress已通过useMemo计算
 
   return (
     <div className={`h-screen flex flex-col ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
