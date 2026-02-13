@@ -226,7 +226,9 @@ export default function CreateCharacterPage({ params }: { params: { id: string }
                     value={characterData.description}
                     onChange={(value) => setCharacterData(prev => ({ ...prev, description: value || '' }))}
                     height={250}
-                    placeholder="请描述角色的基本信息、背景故事等..."
+                    textareaProps={{
+                      placeholder: "请描述角色的基本信息、背景故事等..."
+                    }}
                   />
                 </div>
               </div>

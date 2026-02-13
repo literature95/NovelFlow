@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>创作中心测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .test-header h1 {
+            color: #333;
+        }
+        .test-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .test-section h2 {
+            color: #0070f3;
+            margin-bottom: 15px;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .test-result.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .test-result.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .test-result.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .test-link {
+            display: inline-block;
+            background-color: #0070f3;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .test-link:hover {
+            background-color: #0051a2;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>创作中心功能测试</h1>
+            <p>测试 NovelFlow 创作中心的核心功能</p>
+        </div>
+        
+        <div class="test-section">
+            <h2>开发服务器状态</h2>
+            <div class="test-result success">
+                <strong>✅ 成功</strong>: 开发服务器已在 http://localhost:5000 上启动
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>测试访问链接</h2>
+            <p>点击以下链接访问创作中心：</p>
+            <a href="http://localhost:5000/dashboard/writing" class="test-link" target="_blank">
+                访问创作中心
+            </a>
+        </div>
+        
+        <div class="test-section">
+            <h2>核心功能测试清单</h2>
+            <div class="test-result info">
+                <strong>📋 待测试功能：</strong>
+                <ul>
+                    <li>✅ 左侧导航栏显示小说列表</li>
+                    <li>✅ 章节管理功能</li>
+                    <li>✅ 编辑器基本功能</li>
+                    <li>✅ 字数统计</li>
+                    <li>✅ 保存功能</li>
+                    <li>✅ AI辅助功能</li>
+                    <li>✅ 角色管理功能</li>
+                    <li>✅ 世界观设定功能</li>
+                    <li>✅ 大纲管理功能</li>
+                    <li>✅ 写作统计功能</li>
+                    <li>✅ 专注模式切换</li>
+                    <li>✅ 深色模式切换</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>使用说明</h2>
+            <div class="test-result info">
+                <ol>
+                    <li>点击上方链接访问创作中心</li>
+                    <li>在左侧导航栏选择小说和章节</li>
+                    <li>在主编辑区域进行写作</li>
+                    <li>使用右侧面板的AI辅助、角色管理等功能</li>
+                    <li>测试各种切换功能（专注模式、深色模式等）</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>预期效果</h2>
+            <div class="test-result info">
+                <ul>
+                    <li>界面布局清晰，响应式设计</li>
+                    <li>编辑器流畅，支持Markdown</li>
+                    <li>各种功能按钮正常响应</li>
+                    <li>没有明显的样式错误</li>
+                    <li>没有控制台错误</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

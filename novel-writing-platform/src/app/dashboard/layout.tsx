@@ -56,6 +56,11 @@ export default function DashboardLayout({
     {
       label: '创作中心',
       icon: PenTool,
+      href: '/dashboard/writing'
+    },
+    {
+      label: '小说管理',
+      icon: BookOpen,
       href: '/dashboard/novels'
     },
     {
@@ -179,7 +184,8 @@ export default function DashboardLayout({
                 </svg>
                 <span className="text-gray-900 font-medium">
                   {pathname === '/dashboard/workspace' && '工作台'}
-                  {pathname === '/dashboard/novels' && '创作中心'}
+                  {pathname === '/dashboard/writing' && '创作中心'}
+                  {pathname === '/dashboard/novels' && '小说管理'}
                   {pathname === '/dashboard/ai-workshop' && 'AI模型工坊'}
                   {pathname === '/dashboard/settings' && '设置'}
                   {pathname.startsWith('/dashboard/novels/') && '小说详情'}

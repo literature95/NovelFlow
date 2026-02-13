@@ -270,7 +270,9 @@ export default function EditWorldSettingPage({ params }: { params: { id: string;
                   value={worldSettingData.content}
                   onChange={(value) => setWorldSettingData(prev => ({ ...prev, content: value || '' }))}
                   height={400}
-                  placeholder="请详细描述这个世界观设定的具体内容..."
+                  textareaProps={{
+                    placeholder: "请详细描述这个世界观设定的具体内容..."
+                  }}
                 />
               </div>
               <div className="mt-2 text-sm text-gray-500">
