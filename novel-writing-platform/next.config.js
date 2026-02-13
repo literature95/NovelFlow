@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
-  serverExternalPackages: ['@prisma/client', 'bcrypt'],
   env: {
     DOCKER_ENV: process.env.DOCKER_ENV || 'false',
   },
